@@ -1,0 +1,15 @@
+{
+  "name": "emailreports",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "dependencies": {
+    "phantomjs": ">=1.0.0",
+    "emailjs":""
+  },
+  "author": "Vincent P. Minde",
+  "license": "BSD-2-Clause"
+}
