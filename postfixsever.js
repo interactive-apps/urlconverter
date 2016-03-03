@@ -4,7 +4,7 @@
 
 var email   = require("emailjs");
 
-postfixSend = function postfixSend(emailInfo, callback) {
+postfixSend = function postfixSend(serverConfigs,emailInfo, callback) {
 
     var server  = email.server.connect({
         user:    "vincentminde",
