@@ -2,10 +2,7 @@
   "name": "emailreports",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "test"
-  },
+  "main": "start.js",
   "dependencies": {
     "phantomjs": ">=1.0.0",
     "emailjs":""

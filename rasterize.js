@@ -18,8 +18,10 @@ if (system.args.length < 3 || system.args.length > 5) {
 } else {
     address = system.args[1];
     output = system.args[2];
-    page.viewportSize = { width: 600, height: 600 };
-    if (system.args.length > 3 && system.args[2].substr(-4) === ".pdf") {
+    page.paperSize = { width: (1220) + 'px',
+        height: (1920 * (72/96)) + 'px',format: 'A4', orientation: 'portrait', margin:'1cm'};
+    page.viewportSize = { width: '595px', height: '842px', margin: '0px' };
+    /*if (system.args.length > 3 && system.args[2].substr(-4) === ".pdf") {
         size = system.args[3].split('*');
         page.paperSize = size.length === 2 ? { width: size[0], height: size[1], margin: '0px' }
             : { format: system.args[3], orientation: 'portrait', margin: '1cm' };
@@ -40,19 +42,18 @@ if (system.args.length < 3 || system.args.length > 5) {
     }
     if (system.args.length > 4) {
         page.zoomFactor = system.args[4];
-    }
+    }*/
+
     page.open(address, function (status) {
         if (status !== 'success') {
             console.log('Unable to load the address!');
             phantom.exit(1);
         } else {
             window.setTimeout(function () {
-                console.log(document.readyState);
-                console.log("Hey");
+                //page.zoomFactor = 0.1;
                 page.render(output);
-                console.log("Hey1");
                 phantom.exit();
-            }, 5000);
+            }, 60000);
         }
     });
 }
