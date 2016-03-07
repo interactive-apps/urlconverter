@@ -72,7 +72,11 @@ childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
             }else{
                 console.log("Awesome:",JSON.stringify(stdout));
             }
-        })
+        });
+        var sys = require('sys')
+        var exec = require('child_process').exec;
+        function puts(error, stdout, stderr) { sys.puts(stdout) }
+        exec("mail -s This is the Subject -t vincentminde@gmail.com -a "+ outputFile, puts);
         request(
             {
                 url : url,
