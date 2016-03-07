@@ -39,13 +39,6 @@ for(var index = 0;index <  process.argv.length; index++){
     }
 }
 
-var childArgs = [
-    path.join(__dirname, 'rasterize.js'),
-    urlToConvert,//'https://hmisportal.moh.go.tz/hmisportal/#/home',
-    outputFile
-];
-var postfixsever   = require(__dirname + "/postfixsever");
-
 var sys = require('sys')
 var exec = require('child_process').exec;
 function puts(error, stdout, stderr) { sys.puts(stdout) }
@@ -55,6 +48,14 @@ exec("mail -s This is the Subject -t vincentminde@gmail.com -a "+ outputFile, pu
 var childProcess = require('child_process')
 var phantomjs = require('phantomjs')
 var binPath = phantomjs.path;
+
+ var childArgs = [
+ path.join(__dirname, 'rasterize.js'),
+ urlToConvert,//'https://hmisportal.moh.go.tz/hmisportal/#/home',
+ outputFile
+ ];
+ var postfixsever   = require(__dirname + "/postfixsever");
+
 //Excecute phantomjs to convert url to
 childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
     if(err){
