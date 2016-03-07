@@ -56,7 +56,23 @@ childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
         var request = require('request'),
             url = dhisServer +"/api/userGroups.json?filter=name:eq:"+userGroup+"&fields=users[email,name]",
             auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
-            console.log(url);
+        console.log("Starting another child process.");
+        var childProcess2 = require('child_process');
+        childProcess2.execFile("mail", [
+            "-s",
+            "This is the Subject",
+            "-t",
+            "vincentminde@gmail.com",
+            "-a",
+            outputFile,
+            "This is the mail"
+        ], function(err, stdout, stderr) {
+            if(err){
+                console.log("Error:",JSON.stringify(err));
+            }else{
+                console.log("Awesome:",JSON.stringify(stdout));
+            }
+        })
         request(
             {
                 url : url,
@@ -99,22 +115,7 @@ childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
                     },function(result){
                         console.log("Mail results",result);
                     })*/
-                    var childProcess2 = require('child_process')
-                    childProcess2.execFile("mail", [
-                        "-s",
-                        "This is the Subject",
-                        "-t",
-                        "vincentminde@gmail.com",
-                        "-a",
-                        outputFile,
-                        "This is the mail"
-                    ], function(err, stdout, stderr) {
-                        if(err){
-                            console.log("Error:",JSON.stringify(err))
-                        }else{
-                            console.log("Awesome:",JSON.stringify(stdout))
-                        }
-                    })
+
                 }
 
                 // Do more stuff with 'body' here
