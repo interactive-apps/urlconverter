@@ -99,7 +99,8 @@ childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
                     },function(result){
                         console.log("Mail results",result);
                     })*/
-                    childProcess.execFile("mail", [
+                    var childProcess2 = require('child_process')
+                    childProcess2.execFile("mail", [
                         "-s",
                         "This is the Subject",
                         "-t",
