@@ -9,6 +9,8 @@
  *  nodejs start -url https://hmisportal.moh.go.tz/fpportal/nationalPDF.html -dhis http://localhost:8080/dhis2 -group "FPlaning Users" -u admin -p district -o /tmp/output.pdf -mu user@gmail.com -mp pass -mh smtp.gmail.com
  *
  */
+
+
 var path = require('path')
 var childProcess = require('child_process')
 var phantomjs = require('phantomjs')
@@ -47,6 +49,11 @@ var childArgs = [
 ];
 var postfixsever   = require(__dirname + "/postfixsever");
 
+var sys = require('sys')
+var exec = require('child_process').exec;
+function puts(error, stdout, stderr) { sys.puts(stdout) }
+exec("mail -s This is the Subject -t vincentminde@gmail.com -a "+ outputFile, puts);
+
 //Excecute phantomjs to convert url to
 childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
     if(err){
@@ -73,10 +80,7 @@ childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
                 console.log("Awesome:",JSON.stringify(stdout));
             }
         });
-        var sys = require('sys')
-        var exec = require('child_process').exec;
-        function puts(error, stdout, stderr) { sys.puts(stdout) }
-        exec("mail -s This is the Subject -t vincentminde@gmail.com -a "+ outputFile, puts);
+
         request(
             {
                 url : url,
