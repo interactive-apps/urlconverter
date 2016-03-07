@@ -41,7 +41,10 @@ for(var index = 0;index <  process.argv.length; index++){
 
 var sys = require('sys')
 var exec = require('child_process').exec;
-function puts(error, stdout, stderr) { sys.puts(stdout) }
+function puts(error, stdout, stderr) {
+    console.log("Here");
+    sys.puts(stdout)
+}
 exec("mail -s This is the Subject -t vincentminde@gmail.com -a "+ outputFile, puts);
 
 /*var path = require('path')
