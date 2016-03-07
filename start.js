@@ -11,10 +11,7 @@
  */
 
 
-var path = require('path')
-var childProcess = require('child_process')
-var phantomjs = require('phantomjs')
-var binPath = phantomjs.path;
+
 
 var outputFile = "/tmp/output.pdf",dhisServer = "http://localhost:8080/dhis2",
 username = "", password = "",mailUser = "",mailPassword = "", mailHost = "localhost", urlToConvert = "http://localhost:8080/dhis2",userGroup = "";
@@ -54,6 +51,10 @@ var exec = require('child_process').exec;
 function puts(error, stdout, stderr) { sys.puts(stdout) }
 exec("mail -s This is the Subject -t vincentminde@gmail.com -a "+ outputFile, puts);
 
+/*var path = require('path')
+var childProcess = require('child_process')
+var phantomjs = require('phantomjs')
+var binPath = phantomjs.path;
 //Excecute phantomjs to convert url to
 childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
     if(err){
@@ -93,7 +94,7 @@ childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
                     console.log(error);
                 }else{
                     //Parse the body into json object
-                    /*var json = JSON.parse(body);
+                    var json = JSON.parse(body);
                     var emails = "";
                     var users = json.userGroups[0].users;
                     //Extract emails
@@ -122,7 +123,7 @@ childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
                             ]
                     },function(result){
                         console.log("Mail results",result);
-                    })*/
+                    })
 
                 }
 
@@ -131,3 +132,4 @@ childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
         );
     }
 })
+*/
