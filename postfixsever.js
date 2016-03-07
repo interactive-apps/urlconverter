@@ -12,7 +12,8 @@ postfixSend = function postfixSend(serverConfigs,emailInfo, callback) {
         from:    emailInfo.from,
         to:      emailInfo.to,
         subject: emailInfo.subject,
-        attachment:emailInfo.attachment
+        attachment:emailInfo.attachment,
+        port:25
 
     }, function(err, message) {
         callback(err);

@@ -39,25 +39,7 @@ for(var index = 0;index <  process.argv.length; index++){
     }
 }
 
-/*var sys = require('sys')
-var exec = require('child_process').exec;
-function puts(error, stdout, stderr) {
-    console.log("Here");
-    sys.puts(stdout)
-}
-exec("mail -s This is the Subject -t vincentminde@gmail.com -a "+ outputFile, puts);*/
-var spawn = require('child_process').spawn;
-var child = spawn('mail', [
-    '-s', 'This is the Subject',
-    '-t', 'vincentminde@gmail.com',
-    '-a', outputFile
-]);
-child.stdout.on('data', function(chunk) {
-    // output will be here in chunks
-    console.log("Awesome");
-    console.log(chunk);
-});
-/*var path = require('path')
+var path = require('path')
 var childProcess = require('child_process')
 var phantomjs = require('phantomjs')
 var binPath = phantomjs.path;
@@ -145,5 +127,4 @@ childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
             }
         );
     }
-})
-*/
+});
