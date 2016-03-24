@@ -70,7 +70,6 @@ function fetchReport(organisationUnit){
                 console.log("Failed to fetch url:", err);
                 reject();
             } else {
-                console.log("Awesome fetch:");
                 attachments[organisationUnit.id] = {path: outputFile, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
                 resolve();
                 //Fetch the group of user to get the report
@@ -107,22 +106,8 @@ function fetchUsers(){
                     var users = json.userGroups[0].users;
                     //Extract emails
                     for (var userIndex in users) {
-                        var email = users[userIndex].name + " <" + users[userIndex].email + ">";
-                        var promises = [];
 
-                        for(var orgUnit in users[userIndex].organisationUnits){
-
-                            promises.push(fetchReport(users[userIndex].organisationUnits[orgUnit]));
-                        }
-
-                        allPromises.push(Promise.all(promises)
-                            .then(function (res) {
-                                var userAttachments = [];
-                                for(var orgUnit in users[userIndex].organisationUnits){
-                                    userAttachments.push(attachments[users[userIndex].organisationUnits[orgUnit].id]);
-                                }
-                                sendEmail(email,userAttachments);
-                            }));
+                        allPromises.push(sendUserEmails(users[userIndex]));
                     }
                     console.log(emails);
                     resolve(emails);
@@ -137,7 +122,30 @@ function fetchUsers(){
         );
     });
 }
+function sendUserEmails(user){
+    var Promise = require('promise');
 
+    return new Promise(function (resolve, reject) {
+        var email = user.name + " <" + user.email + ">";
+        var promises = [];
+
+        for(var orgUnit in user.organisationUnits){
+
+            promises.push(fetchReport(user.organisationUnits[orgUnit]));
+        }
+        Promise.all(promises)
+            .then(function (res) {
+                var userAttachments = [];
+                for(var orgUnit in user.organisationUnits){
+                    userAttachments.push(attachments[user.organisationUnits[orgUnit].id]);
+                }
+                sendEmail(email,userAttachments).then(function(){
+                    resolve();
+                });
+            });
+    });
+
+}
 function sendEmail(email,attachments){
     var Promise = require('promise');
     return new Promise(function (resolve, reject) {
