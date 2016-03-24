@@ -6,13 +6,13 @@
 /**
  * Currently used command
  *
- *  nodejs start -url https://hmisportal.moh.go.tz/fpportal/nationalPDF.html -dhis http://localhost:8080/dhis2 -group "FPlaning Users" -u admin -p district -o /tmp/output.pdf -mu user@gmail.com -mp pass -mh smtp.gmail.com
+ *  sudo nodejs start -url https://hmisportal.moh.go.tz/fpportal/nationalPDF.html -dhis https://hmisportal.moh.go.tz/training -group "Family Planning Report" -u vincentminde -p Ilovemymum1 -o /tmp/output.pdf -mh localhost
  *
  */
 
 
 
-var outputFile = "/tmp/output.pdf", dhisServer = "http://localhost:8080/dhis2",
+var dhisServer = "http://localhost:8080/dhis2",
     username = "", password = "", mailUser = "", mailPassword = "", mailHost = "localhost", urlToConvert = "http://localhost:8080/dhis2", userGroup = "";
 //Evaluate arguments
 for (var index = 0; index < process.argv.length; index++) {
@@ -23,8 +23,6 @@ for (var index = 0; index < process.argv.length; index++) {
         username = process.argv[index + 1];
     } else if (commandArgument == "-p") {
         password = process.argv[index + 1];
-    } else if (commandArgument == "-o") {
-        outputFile = process.argv[index + 1];
     } else if (commandArgument == "-mu") {
         mailUser = process.argv[index + 1];
     } else if (commandArgument == "-mp") {
@@ -38,27 +36,49 @@ for (var index = 0; index < process.argv.length; index++) {
     }
 }
 
-var path = require('path')
-var childProcess = require('child_process')
-var phantomjs = require('phantomjs')
-var binPath = phantomjs.path;
+var attachments =  [];
+function fetchUrl(url){
+    var Promise = require('promise');
+    return new Promise(function (resolve, reject) {
+        var path = require('path')
+        var childProcess = require('child_process')
+        var phantomjs = require('phantomjs')
+        var binPath = phantomjs.path;
 
-var childArgs = [
-    path.join(__dirname, 'rasterize.js'),
-    urlToConvert,//'https://hmisportal.moh.go.tz/hmisportal/#/home',
-    outputFile
-];
-var postfixsever = require(__dirname + "/postfixsever");
+        var date = new Date();
+        var outputFile = "/tmp/report" + date.getFullYear() + "."  + (date.getMonth() + 1)+ "."  + date.getDay()+ "."  + date.getHours()+ "."  + date.getMinutes()+ "."  + date.getSeconds()+ "."  + date.getMilliseconds() + ".pdf"
+        var childArgs = [
+            path.join(__dirname, 'rasterize.js'),
+            url,//'https://hmisportal.moh.go.tz/hmisportal/#/home',
+            outputFile
+        ];
+        var postfixsever = require(__dirname + "/postfixsever");
 
-//Excecute phantomjs to convert url to
-childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
-    if (err) {
-        console.log("Failed to fetch url:", err);
-    } else {
-        //Fetch the group of user to get the report
-        var request = require('request'),
-            url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[email,name]",
-            auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
+        //Excecute phantomjs to convert url to
+        childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
+            if (err) {
+                console.log("Failed to fetch url:", err);
+                reject();
+            } else {
+                console.log("Awesome fetch:");
+                console.log(stdout);
+                var resultJSON = JSON.parse(stdout);
+                attachments.push({path: outputFile, type: "application/pdf", name: resultJSON.title + ".pdf"});
+                resolve();
+                //Fetch the group of user to get the report
+
+            }
+        });
+    });
+}
+
+var emails = "";
+function fetchUsers(){
+    var request = require('request'),
+        url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[email,name]",
+        auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
+    var Promise = require('promise');
+    return new Promise(function (resolve, reject) {
         request(
             {
                 url: url,
@@ -68,11 +88,12 @@ childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             },
             function (error, response, body) {
                 if (error) {
+                    reject(error);
                     console.log(error);
                 } else {
                     //Parse the body into json object
                     var json = JSON.parse(body);
-                    var emails = "";
+
                     var users = json.userGroups[0].users;
                     //Extract emails
                     for (var user in users) {
@@ -83,38 +104,49 @@ childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
                         }
                     }
                     console.log(emails);
-                    //Send the email
-                    var postfixsever = require(__dirname + "/postfixsever");
-                    postfixsever.postfixSend(
-                        {
-                            user: mailUser,
-                            password: mailPassword,
-                            host: mailHost,
-                            ssl: false,
-                            port: 25
-                        },
-                        {
-                            msg: "Reports Generated By DHIS 2",
-                            from: "portal@hmisportal.moh.go.tz",
-                            to: emails,
-                            subject: "Sample Report",
-                            attachment: [
-                                {path: outputFile, type: "application/pdf", name: "report.pdf"}
-                            ]
-                        }, function (result) {
-                            if (result) {
-                                console.log("Error", result);
-                            } else {
-                                console.log("Awesome mails sent.");
-                            }
-
-                        }
-                    );
-
+                    resolve(emails);
                 }
 
                 // Do more stuff with 'body' here
             }
         );
-    }
-});
+    });
+}
+
+var Promise = require('promise');
+var promises = [];
+promises.push(fetchUsers());
+var urls = urlToConvert.split(",");
+for(var i in urlToConvert.split(",")){
+    promises.push(fetchUrl(urls[i]));
+}
+Promise.all(promises)
+    .then(function (res) {
+        var postfixsever = require(__dirname + "/postfixsever");
+        postfixsever.postfixSend(
+            {
+                user: mailUser,
+                password: mailPassword,
+                host: mailHost,
+                ssl: false,
+                port: 25
+            },
+            {
+                msg: "Reports Generated By DHIS 2",
+                from: "portal@hmisportal.moh.go.tz",
+                to: emails,
+                subject: "Sample Report",
+                attachment: attachments
+                /*attachment: [
+                 {path: outputFile, type: "application/pdf", name: "report.pdf"}
+                 ]*/
+            }, function (result) {
+                if (result) {
+                    console.log("Mail Error", result);
+                } else {
+                    console.log("Awesome mails sent.");
+                }
+
+            }
+        );
+    });

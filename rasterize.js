@@ -52,6 +52,7 @@ if (system.args.length < 3 || system.args.length > 5) {
             window.setTimeout(function () {
                 //page.zoomFactor = 0.1;
                 page.render(output);
+                console.log('{"title":"' + page.title +'"}');
                 phantom.exit();
             }, 60000);
         }

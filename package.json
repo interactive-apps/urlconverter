@@ -5,7 +5,8 @@
   "main": "start.js",
   "dependencies": {
     "phantomjs": ">=1.0.0",
-    "emailjs":""
+    "emailjs":"",
+    "promise":""
   },
   "author": "Vincent P. Minde",
   "license": "BSD-2-Clause"
