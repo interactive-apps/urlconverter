@@ -13,7 +13,7 @@
 
 
 var dhisServer = "http://localhost:8080/dhis2",
-    username = "", password = "", mailUser = "", mailPassword = "", mailHost = "localhost", urlToConvert = "http://localhost:8080/dhis2", userGroup = "";
+    username = "", password = "", mailUser = "", mailPassword = "", mailHost = "localhost", userGroup = "";
 //Evaluate arguments
 for (var index = 0; index < process.argv.length; index++) {
     var commandArgument = process.argv[index];
@@ -29,8 +29,6 @@ for (var index = 0; index < process.argv.length; index++) {
         mailPassword = process.argv[index + 1];
     } else if (commandArgument == "-mh") {
         mailHost = process.argv[index + 1];
-    } else if (commandArgument == "-url") {
-        urlToConvert = process.argv[index + 1];
     } else if (commandArgument == "-group") {
         userGroup = process.argv[index + 1];
     }
@@ -52,9 +50,9 @@ function fetchReport(organisationUnit){
             reject();
             return;
         }
-        var path = require('path')
-        var childProcess = require('child_process')
-        var phantomjs = require('phantomjs')
+        var path = require('path');
+        var childProcess = require('child_process');
+        var phantomjs = require('phantomjs');
         var binPath = phantomjs.path;
 
         var date = new Date();
@@ -141,9 +139,6 @@ function fetchUsers(){
 }
 
 function sendEmail(email,attachments){
-    var request = require('request'),
-        url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[email,name]",
-        auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
     var Promise = require('promise');
     return new Promise(function (resolve, reject) {
         var postfixsever = require(__dirname + "/postfixsever");
@@ -165,7 +160,7 @@ function sendEmail(email,attachments){
                 if (result) {
                     console.log("Mail Error", result);
                 } else {
-                    console.log("Awesome mails sent.");
+                    console.log("Email sent:",email,JSON.stringify(attachments));
                 }
 
             }
