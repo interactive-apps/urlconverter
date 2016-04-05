@@ -194,7 +194,7 @@ function sendEmail(user,attachments){
         '    Kind regards,<br />'+
         '    Mr Clement Kihinga<br />'+
         'Reproductive and Child Health Section (RCHS)<br />'+
-        'Ministry of Health, Community Development, Gender, Elderly and Children<br /><br /><a href="https://hmisportal.moh.go.tz/fpportal/#/unsubscribe?uid="'+user.id+'>Click Here to Unsubscribe</a>.'+
+        'Ministry of Health, Community Development, Gender, Elderly and Children<br /><br />To stop receiving these emails please <a href="https://hmisportal.moh.go.tz/fpportal/#/unsubscribe?uid="'+user.id+'>click here</a> to unsubscribe.'+
         '</html>', alternative:true});
         postfixsever.postfixSend(
             {
