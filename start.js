@@ -151,27 +151,24 @@ function sendEmail(user,attachments){
     return new Promise(function (resolve, reject) {
         var postfixsever = require(__dirname + "/postfixsever");
         attachments.unshift({data:'' +
-        '<html><head>' +
-        '<meta charset="UTF-8">' +
-        '<title>Portal Report</title></head>' +
-        '<body>Dear {{Name}}'+
+        '<html>Dear <b>' + user.name +'</b>,<br />'+
         '    Find attached monthly Family Planning summary report/s for {{Month}} {{Year}}.'+
         'Please use Family Planning monthly report/s as a program and performance management tool, to help identify gaps in HR training and FP service delivery, for more targeted and efficient supportive supervision, program planning and resource allocation. You are reminded to pay attention to the action items listed in this report.'+
         '    For more information, refer to the following:'+
         '    <ul>' +
-        '       <li><a>The Family Planning Dashboard</a></li>'+
-        '       <li><a>The TrainTracker HR training database</a></li>' +
+        '       <li><a href="https://hmisportal.moh.go.tz/fpportal/#/familyPlanningHome">The Family Planning Dashboard</a></li>'+
+        '       <li><a href="http://www.rchs.go.tz/traintracker/main.php">The TrainTracker HR training database</a></li>' +
         '   </ul>'+
         'You can view archived reports on the Family Planning Dashboard under the ‘Reports’ tab (add hyperlink if possible when ready)'+
-        'Do not reply to this email. For further technical assistance or to provide feedback on the FP Dashboard, please follow this link: add link to support/feedback box on HMIS'+
+        'Do not reply to this email. For further technical assistance or to provide feedback on the FP Dashboard, please follow this link: <a href="https://hmisportal.moh.go.tz/fpportal/#/feedback">https://hmisportal.moh.go.tz/fpportal/#/feedback</a>'+
         'If you need to verify information presented in the FP dashboard, please check with the HMIS focal person.'+
-        '    If you are unable to view the attached PDF reports, you may wish to download a free PDF reader here.'+
+        '    If you are unable to view the attached PDF reports, you may wish to download a free PDF reader <a href="https://get.adobe.com/reader/">here</a>.'+
         '    We hope you find this report useful.'+
         '    Kind regards,'+
         '    Mr Clement Kihinga'+
         'Reproductive and Child Health Section (RCHS)'+
-        'Ministry of Health, Community Development, Gender, Elderly and Children'+
-        '</body></html>', alternative:true});
+        'Ministry of Health, Community Development, Gender, Elderly and Children<br /><a>Click Here to Unsubscribe</a>.'+
+        '</html>', alternative:true});
         postfixsever.postfixSend(
             {
                 user: mailUser,
