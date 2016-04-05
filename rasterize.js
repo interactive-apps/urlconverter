@@ -30,7 +30,7 @@ if (system.args.length < 3 || system.args.length > 5) {
                 //page.zoomFactor = 0.1;
                 page.render(output);
                 phantom.exit();
-            }, 5000);
+            }, 60000);
         }
     });
 }
