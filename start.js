@@ -186,8 +186,8 @@ function sendEmail(user,attachments){
         '       <li><a href="https://hmisportal.moh.go.tz/fpportal/#/familyPlanningHome">The Family Planning Dashboard</a></li>'+
         '       <li><a href="http://www.rchs.go.tz/traintracker/main.php">The TrainTracker HR training database</a></li>' +
         '   </ul>'+
-        'You can view archived reports on the Family Planning Dashboard under the ‘Reports’ tab (add hyperlink if possible when ready)'+
-        'Do not reply to this email. For further technical assistance or to provide feedback on the FP Dashboard, please follow this link: <a href="https://hmisportal.moh.go.tz/fpportal/#/feedback">https://hmisportal.moh.go.tz/fpportal/#/feedback</a>'+
+        //You can view archived reports on the Family Planning Dashboard under the ‘Reports’ tab (add hyperlink if possible when ready)'+
+        'Do not reply to this email. For further technical assistance or to provide feedback on the FP Dashboard, please follow this link: <a href="https://hmisportal.moh.go.tz/fpportal/#/feedback">https://hmisportal.moh.go.tz/fpportal/#/feedback</a>. <br />'+
         'If you need to verify information presented in the FP dashboard, please check with the HMIS focal person.'+
         '    If you are unable to view the attached PDF reports, you may wish to download a free PDF reader <a href="https://get.adobe.com/reader/">here</a>.<br />'+
         '    We hope you find this report useful.<br /><br />'+
