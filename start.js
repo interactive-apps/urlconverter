@@ -82,7 +82,7 @@ function fetchReport(organisationUnit){
 var emails = "";
 function fetchUsers(){
     var request = require('request'),
-        url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[email,name,organisationUnits[id,name,level]]",
+        url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[id,email,name,organisationUnits[id,name,level]]",
         auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
     var Promise = require('promise');
 
