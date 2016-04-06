@@ -39,11 +39,11 @@ function fetchReport(organisationUnit){
     var Promise = require('promise');
     var url = "";
     if(organisationUnit.level == "1"){
-        url = "https://127.0.0.1/fpportal/nationalPDF.html";
+        url = "https://hmisportal.moh.go.tz/fpportal/nationalPDF.html";
     }else if(organisationUnit.level == "2"){
-        url = "https://127.0.0.1/fpportal/regionPDF.html#/home?uid=" + organisationUnit.id;
+        url = "https://hmisportal.moh.go.tz/fpportal/regionPDF.html#/home?uid=" + organisationUnit.id;
     }else if(organisationUnit.level == "3"){
-        url = "https://127.0.0.1/fpportal/districtPDF.html#/home?uid=" + organisationUnit.id;
+        url = "https://hmisportal.moh.go.tz/fpportal/districtPDF.html#/home?uid=" + organisationUnit.id;
     }
     return new Promise(function (resolve, reject) {
         if(url == "" || attachments[organisationUnit.id]){
