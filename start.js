@@ -56,7 +56,7 @@ function fetchReport(organisationUnit){
         var binPath = phantomjs.path;
 
         var date = new Date();
-        var outputFile = "tmp/report" + date.getFullYear() + "."  + (date.getMonth() + 1)+ "."  + date.getDay()+ "."  + date.getHours()+ "."  + date.getMinutes()+ "."  + date.getSeconds()+ "."  + date.getMilliseconds() + ".pdf"
+        var outputFile = "tmp/report" + date.getFullYear() + "."  + (date.getMonth() + 1)+ "."  + date.getDay()+ "."  + date.getHours()+ "."  + date.getMinutes()+ "."  + date.getSeconds()+ "."  + date.getMilliseconds() + ".png"
         var childArgs = [
             path.join(__dirname, 'rasterize.js'),
             url,//'https://hmisportal.moh.go.tz/hmisportal/#/home',
@@ -70,7 +70,7 @@ function fetchReport(organisationUnit){
                 console.log("Failed to fetch url:", err);
                 reject();
             } else {
-                attachments[organisationUnit.id] = {path: outputFile, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
+                attachments[organisationUnit.id] = {path: outputFile, type: "image/png", name: organisationUnit.name + " Report.png"};
                 resolve();
                 //Fetch the group of user to get the report
 
