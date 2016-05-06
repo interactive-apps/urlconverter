@@ -27,6 +27,7 @@ if (system.args.length < 3 || system.args.length > 5) {
             phantom.exit(1);
         } else {
             window.setTimeout(function () {
+                document.body.bgColor = 'white';
                 //page.zoomFactor = 0.1;
                 page.render(output);
                 phantom.exit();
