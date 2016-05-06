@@ -70,9 +70,23 @@ function fetchReport(organisationUnit){
                 console.log("Failed to fetch url:", err);
                 reject();
             } else {
-                attachments[organisationUnit.id] = {path: outputFile, type: "image/png", name: organisationUnit.name + " Report.png"};
-                //attachments[organisationUnit.id] = {path: outputFile, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
-                resolve();
+                console.log("Awesome");
+                var PDFImagePack = require("pdf-image-pack")
+
+                var imgs = [
+                    outputFile
+                ]
+                var output = outputFile + ".pdf";
+                console.log("Awesome1");
+                var slide = new PDFImagePack();
+                console.log("Awesome2");
+                slide.output(imgs, output, function(err, doc){
+                    console.log("finish output");
+                    attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
+                    //attachments[organisationUnit.id] = {path: outputFile, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
+                    resolve();
+                })
+                console.log("Awesome3");
                 //Fetch the group of user to get the report
 
             }

@@ -6,7 +6,8 @@
   "dependencies": {
     "phantomjs": ">=1.0.0",
     "emailjs":"",
-    "promise":""
+    "promise":"",
+    "pdf-image":""
   },
   "author": "Vincent P. Minde",
   "license": "BSD-2-Clause"
