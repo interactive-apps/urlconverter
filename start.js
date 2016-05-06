@@ -82,8 +82,8 @@ function fetchReport(organisationUnit){
                 console.log("Awesome2");
                 slide.output(imgs, output, function(err, doc){
                     console.log("finish output");
-                    attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
-                    //attachments[organisationUnit.id] = {path: outputFile, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
+                    //attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
+                    attachments[organisationUnit.id] = {path: output, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
                     resolve();
                 })
                 console.log("Awesome3");
