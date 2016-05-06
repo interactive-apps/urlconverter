@@ -5,9 +5,9 @@
   "main": "start.js",
   "dependencies": {
     "phantomjs": ">=1.0.0",
-    "emailjs":"",
-    "promise":"",
-    "pdf-image":""
+    "emailjs": "",
+    "promise": "",
+    "pdf-image-pack": "git://github.com/suisho/pdf-image-pack.git#master"
   },
   "author": "Vincent P. Minde",
   "license": "BSD-2-Clause"
