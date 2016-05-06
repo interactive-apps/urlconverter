@@ -33,7 +33,7 @@ if (system.args.length < 3 || system.args.length > 5) {
                 console.log("Page Height:"<pageHeight);
                 //page.zoomFactor = 0.1;
                 //page.render(output,{format: 'png', quality: '100'});
-                var dimensions = {width:595,height: 842};
+                var dimensions = {width:2480,height: 3508};
                 var initialHeight = 0;
                 var i = 1;
                 while(pageHeight > initialHeight){
