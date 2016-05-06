@@ -56,8 +56,8 @@ function fetchReport(organisationUnit){
         var binPath = phantomjs.path;
 
         var date = new Date();
-        var fileName = "report" + date.getFullYear() + "."  + (date.getMonth() + 1)+ "."  + date.getDay()+ "."  + date.getHours()+ "."  + date.getMinutes()+ "."  + date.getSeconds()+ "."  + date.getMilliseconds() + ".png";"
-        var outputFile = "tmp/" + fileName
+        var fileName = "report" + date.getFullYear() + "."  + (date.getMonth() + 1)+ "."  + date.getDay()+ "."  + date.getHours()+ "."  + date.getMinutes()+ "."  + date.getSeconds()+ "."  + date.getMilliseconds() + ".png";
+        var outputFile = "tmp/" + fileName;
         var childArgs = [
             path.join(__dirname, 'rasterize.js'),
             url,//'https://hmisportal.moh.go.tz/hmisportal/#/home',
