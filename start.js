@@ -85,7 +85,7 @@ function fetchReport(organisationUnit){
                         for(var i in files){
                             console.log();
                             if(files[i].indexOf(fileName) > -1){
-                                imgs.push(files[i]);
+                                imgs.push("tmp/" + files[i]);
                             }
                         }
                         console.log("Rendering Page.");
