@@ -83,7 +83,6 @@ function fetchReport(organisationUnit){
                         console.log("Error loading files.");
                     }else{
                         for(var i in files){
-                            console.log();
                             if(files[i].indexOf(fileName) > -1){
                                 imgs.push("tmp/" + files[i]);
                             }
