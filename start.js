@@ -56,7 +56,8 @@ function fetchReport(organisationUnit){
         var binPath = phantomjs.path;
 
         var date = new Date();
-        var outputFile = "tmp/report" + date.getFullYear() + "."  + (date.getMonth() + 1)+ "."  + date.getDay()+ "."  + date.getHours()+ "."  + date.getMinutes()+ "."  + date.getSeconds()+ "."  + date.getMilliseconds() + ".png";
+        var fileName = "report" + date.getFullYear() + "."  + (date.getMonth() + 1)+ "."  + date.getDay()+ "."  + date.getHours()+ "."  + date.getMinutes()+ "."  + date.getSeconds()+ "."  + date.getMilliseconds() + ".png";"
+        var outputFile = "tmp/" + fileName
         var childArgs = [
             path.join(__dirname, 'rasterize.js'),
             url,//'https://hmisportal.moh.go.tz/hmisportal/#/home',
@@ -74,19 +75,31 @@ function fetchReport(organisationUnit){
                 var PDFImagePack = require("pdf-image-pack")
 
                 var imgs = [
-                    outputFile
-                ]
-                var output = outputFile + ".pdf";
-                console.log("Awesome1");
-                var slide = new PDFImagePack();
-                console.log("Awesome2");
-                slide.output(imgs, output, function(err, doc){
-                    console.log("finish output");
-                    //attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
-                    attachments[organisationUnit.id] = {path: output, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
-                    resolve();
+                    //outputFile
+                ];
+                var fs = require("fs");
+                fs.readdir("tmp", function(err,files){
+                    if(err){
+                        console.log("Error loading files.");
+                    }else{
+                        for(var i in files){
+                            console.log();
+                            if(files[i].indexOf(fileName) > -1){
+                                imgs.push(files[i]);
+                            }
+                        }
+                        console.log("Rendering Page.");
+                        var output = outputFile + ".pdf";
+                        var slide = new PDFImagePack();
+                        slide.output(imgs, output, function(err, doc){
+                            console.log("finish output");
+                            //attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
+                            attachments[organisationUnit.id] = {path: output, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
+                            resolve();
+                        });
+                    }
                 })
-                console.log("Awesome3");
+
                 //Fetch the group of user to get the report
 
             }

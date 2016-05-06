@@ -27,9 +27,22 @@ if (system.args.length < 3 || system.args.length > 5) {
             phantom.exit(1);
         } else {
             window.setTimeout(function () {
-                document.body.bgColor = 'white';
+                var pageHeight = page.evaluate(function(){
+                    return document.body.scrollHeight;
+                });
+                console.log("Page Height:"<pageHeight);
                 //page.zoomFactor = 0.1;
-                page.render(output);
+                //page.render(output,{format: 'png', quality: '100'});
+                var dimensions = {width:595,height: 842};
+                var initialHeight = 0;
+                var i = 1;
+                while(pageHeight > initialHeight){
+                    page.clipRect = { left: 0, top: initialHeight, width: dimensions.width, height: dimensions.height };
+                    page.render(output + "." + i,{format: 'png', quality: '100'});
+                    initialHeight = initialHeight + dimensions.height;
+                    i++;
+                }
+
                 phantom.exit();
             }, 10000);
         }
