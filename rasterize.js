@@ -18,9 +18,19 @@ if (system.args.length < 3 || system.args.length > 5) {
 } else {
     address = system.args[1];
     output = system.args[2];
-    page.paperSize = { width: (1220) + 'px',
+    /*page.paperSize = { width: (1220) + 'px',
         height: (1920 * (72/96)) + 'px',format: 'A4', orientation: 'portrait', margin:'1cm'};
-    page.viewportSize = { width: '595px', height: '842px', margin: '0px' };
+    page.viewportSize = { width: '595px', height: '842px', margin: '0px' };*/
+
+    var dpi = 150;
+
+    var widthInInches = 8.27;
+    var heightInInches = 11.69;
+
+    var pdfViewportWidth = dpi*widthInInches;
+    var pdfViewportHeight = dpi*heightInInches;
+    page.paperSize = {format: 'A4', orientation: 'portrait', margin:'1cm'};
+    page.viewportSize = { width: pdfViewportWidth, height: pdfViewportHeight };
     page.open(address, function (status) {
         if (status !== 'success') {
             console.log('Unable to load the address!');
