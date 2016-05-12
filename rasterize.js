@@ -54,7 +54,7 @@ if (system.args.length < 3 || system.args.length > 5) {
                 window.setTimeout(function () {
                     renderReport();
                     console.clear();
-                    console.log("{'Awesome':'Good'}");
+                    console.log("Rendered Successfully");
                     phantom.exit();
                 }, 5000);
             })();

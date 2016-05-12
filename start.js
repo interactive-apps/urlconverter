@@ -67,6 +67,10 @@ function fetchReport(organisationUnit) {
 
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
+            console.log(stdout.length);
+            if(stdout == ("Rendered Successfully") > -1){
+                console.log("Report Renders");
+            }
             console.log("'" + stdout + "'");
             if (err) {
                 console.log("Failed to fetch url:", err);
