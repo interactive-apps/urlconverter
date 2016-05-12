@@ -68,8 +68,6 @@ function fetchReport(organisationUnit) {
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             console.log(stdout.length);
-
-            console.log("'" + stdout + "'");
             if (err) {
                 console.log("Failed to fetch url:", err);
                 reject();
@@ -173,7 +171,11 @@ function sendUserEmails(user) {
             .then(function (res) {
                 var userAttachments = [];
                 for (var orgUnit in userSend.organisationUnits) {
-                    userAttachments.push(attachments[userSend.organisationUnits[orgUnit].id]);
+                    if(attachments[userSend.organisationUnits[orgUnit].id]){
+                        userAttachments.push(attachments[userSend.organisationUnits[orgUnit].id]);
+                    }else{
+                        console.log("Attachment not loaded")
+                    }
                 }
                 sendEmail(userSend, userAttachments).then(function () {
                     resolve();
