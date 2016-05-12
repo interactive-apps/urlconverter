@@ -68,42 +68,45 @@ function fetchReport(organisationUnit) {
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             console.log(stdout.length);
-            if(stdout == ("\nRendered Successfully\n")){
-                console.log("Report Renders");
-            }
+
             console.log("'" + stdout + "'");
             if (err) {
                 console.log("Failed to fetch url:", err);
                 reject();
             } else {
-                var PDFImagePack = require("pdf-image-pack")
+                if(stdout == ("\nRendered Successfully\n")){
+                    console.log("Report Renders");
+                    var PDFImagePack = require("pdf-image-pack")
 
-                var imgs = [
-                    //outputFile
-                ];
-                var fs = require("fs");
-                fs.readdir("tmp", function (err, files) {
-                    if (err) {
-                        console.log("Error loading files.");
-                    } else {
-                        for (var i in files) {
-                            if (files[i].indexOf(fileName) > -1) {
-                                imgs.push("tmp/" + files[i]);
+                    var imgs = [
+                        //outputFile
+                    ];
+                    var fs = require("fs");
+                    fs.readdir("tmp", function (err, files) {
+                        if (err) {
+                            console.log("Error loading files.");
+                        } else {
+                            for (var i in files) {
+                                if (files[i].indexOf(fileName) > -1) {
+                                    imgs.push("tmp/" + files[i]);
+                                }
                             }
+                            var output = outputFile + ".pdf";
+                            var slide = new PDFImagePack();
+                            slide.output(imgs, output, function (err, doc) {
+                                //attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
+                                attachments[organisationUnit.id] = {
+                                    path: output,
+                                    type: "application/pdf",
+                                    name: organisationUnit.name + " Report.pdf"
+                                };
+                                resolve();
+                            });
                         }
-                        var output = outputFile + ".pdf";
-                        var slide = new PDFImagePack();
-                        slide.output(imgs, output, function (err, doc) {
-                            //attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
-                            attachments[organisationUnit.id] = {
-                                path: output,
-                                type: "application/pdf",
-                                name: organisationUnit.name + " Report.pdf"
-                            };
-                            resolve();
-                        });
-                    }
-                })
+                    })
+                }else{
+                    resolve();
+                }
 
                 //Fetch the group of user to get the report
 
