@@ -68,7 +68,7 @@ function fetchReport(organisationUnit) {
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             console.log(stdout.length);
-            if(stdout == ("Rendered Successfully")){
+            if(stdout == ("\nRendered Successfully\n")){
                 console.log("Report Renders");
             }
             console.log("'" + stdout + "'");
