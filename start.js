@@ -67,11 +67,11 @@ function fetchReport(organisationUnit){
 
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
+            console.log(stdout);
             if (err) {
                 console.log("Failed to fetch url:", err);
                 reject();
             } else {
-                console.log("Awesome");
                 var PDFImagePack = require("pdf-image-pack")
 
                 var imgs = [
@@ -87,11 +87,9 @@ function fetchReport(organisationUnit){
                                 imgs.push("tmp/" + files[i]);
                             }
                         }
-                        console.log("Rendering Page.");
                         var output = outputFile + ".pdf";
                         var slide = new PDFImagePack();
                         slide.output(imgs, output, function(err, doc){
-                            console.log("finish output");
                             //attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
                             attachments[organisationUnit.id] = {path: output, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
                             resolve();

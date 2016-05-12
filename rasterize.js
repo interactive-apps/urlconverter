@@ -8,6 +8,20 @@
 var page = require('webpage').create(),
     system = require('system'),
     address, output, size;
+function renderReport(){
+    var pageHeight = page.evaluate(function(){
+        return document.body.scrollHeight;
+    });
+    var dimensions = {width:1120,height: 1850};
+    var initialHeight = 0;
+    var i = 1;
+    while(pageHeight > initialHeight){
+        page.clipRect = { left: 0, top: initialHeight, width: dimensions.width, height: dimensions.height };
+        page.render(output + "." + i,{format: 'png', quality: '100'});
+        initialHeight = initialHeight + dimensions.height;
+        i++;
+    }
+}
 
 if (system.args.length < 3 || system.args.length > 5) {
     console.log('Usage: rasterize.js URL filename [paperwidth*paperheight|paperformat] [zoom]');
@@ -36,26 +50,14 @@ if (system.args.length < 3 || system.args.length > 5) {
             console.log('Unable to load the address!');
             phantom.exit(1);
         } else {
-            window.setTimeout(function () {
-                var pageHeight = page.evaluate(function(){
-                    return document.body.scrollHeight;
-                });
-                console.log("Page Height:"<pageHeight);
-                //page.zoomFactor = 0.1;
-                //page.render(output,{format: 'png', quality: '100'});
-                var dimensions = {width:1120,height: 1850};
-                //var dimensions = {width:1120,height: 1584};
-                var initialHeight = 0;
-                var i = 1;
-                while(pageHeight > initialHeight){
-                    page.clipRect = { left: 0, top: initialHeight, width: dimensions.width, height: dimensions.height };
-                    page.render(output + "." + i,{format: 'png', quality: '100'});
-                    initialHeight = initialHeight + dimensions.height;
-                    i++;
-                }
+            (function(){
+                window.setTimeout(function () {
+                    renderReport();
+                    console.log("{'Awesome':'Good'}");
+                    phantom.exit();
+                }, 5000);
+            })();
 
-                phantom.exit();
-            }, 600000);
         }
     });
 }
