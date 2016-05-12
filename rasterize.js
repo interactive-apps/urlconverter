@@ -53,6 +53,7 @@ if (system.args.length < 3 || system.args.length > 5) {
             (function(){
                 window.setTimeout(function () {
                     renderReport();
+                    console.clear();
                     console.log("{'Awesome':'Good'}");
                     phantom.exit();
                 }, 5000);
