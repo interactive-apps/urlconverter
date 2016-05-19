@@ -8,20 +8,6 @@
 var page = require('webpage').create(),
     system = require('system'),
     address, output, size;
-function renderReport(){
-    var pageHeight = page.evaluate(function(){
-        return document.body.scrollHeight;
-    });
-    var dimensions = {width:1120,height: 1850};
-    var initialHeight = 0;
-    var i = 1;
-    while(pageHeight > initialHeight){
-        page.clipRect = { left: 0, top: initialHeight, width: dimensions.width, height: dimensions.height };
-        page.render(output + "." + i,{format: 'png', quality: '100'});
-        initialHeight = initialHeight + dimensions.height;
-        i++;
-    }
-}
 
 if (system.args.length < 3 || system.args.length > 5) {
     console.log('Usage: rasterize.js URL filename [paperwidth*paperheight|paperformat] [zoom]');
@@ -50,28 +36,26 @@ if (system.args.length < 3 || system.args.length > 5) {
             console.log('Unable to load the address!');
             phantom.exit(1);
         } else {
-            (function(){
-                var inerval = window.setInterval(function () {
-                    if(page.title.toLowerCase("success").indexOf() > -1){
-                        renderReport();
-                        console.log("Rendered Successfully");
-                        phantom.exit();
-                    }else if(page.title.toLowerCase("error").indexOf() > -1){
-                        phantom.exit(1);
-                    }
-                }, 1000);
-            })();
             window.setTimeout(function () {
-                phantom.exit(1);
-            }, 600000);
-            (function(){
-                window.setTimeout(function () {
-                    renderReport();
-                    console.log("Rendered Successfully");
-                    phantom.exit();
-                }, 600000);
-            })();
+                var pageHeight = page.evaluate(function(){
+                    return document.body.scrollHeight;
+                });
+                console.log("Page Height:"<pageHeight);
+                //page.zoomFactor = 0.1;
+                //page.render(output,{format: 'png', quality: '100'});
+                var dimensions = {width:1120,height: 1850};
+                //var dimensions = {width:1120,height: 1584};
+                var initialHeight = 0;
+                var i = 1;
+                while(pageHeight > initialHeight){
+                    page.clipRect = { left: 0, top: initialHeight, width: dimensions.width, height: dimensions.height };
+                    page.render(output + "." + i,{format: 'png', quality: '100'});
+                    initialHeight = initialHeight + dimensions.height;
+                    i++;
+                }
 
+                phantom.exit();
+            }, 600000);
         }
     });
 }
