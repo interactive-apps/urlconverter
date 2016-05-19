@@ -55,7 +55,7 @@ if (system.args.length < 3 || system.args.length > 5) {
                 }
 
                 phantom.exit();
-            }, 600000);
+            }, 1200000);
         }
     });
 }

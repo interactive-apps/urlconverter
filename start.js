@@ -216,9 +216,9 @@ function sendEmail(user, attachments) {
         attachments.unshift({
             data: '' +
             '<html>Dear <b>' + user.name + '</b>,<br /><br />' +
-            '    Find attached monthly Family Planning summary report/s for ' + month + ' ' + year + '.' +
-            '   Please use Family Planning monthly report/s as a program and performance management tool, to help identify gaps in HR training and FP service delivery, for more targeted and efficient supportive supervision, program planning and resource allocation. You are reminded to pay attention to the action items listed in this report.' +
-            '    For more information, refer to the following:' +
+            '    Find attached the monthly Family Planning summary report/s for ' + month + ' ' + year + '.' +
+            '   Please use Family Planning monthly report/s as a program and performance management tool, to help identify gaps in HR training and FP service delivery, for more targeted and efficient supportive supervision, program planning and resource allocation. You are reminded to pay attention to the action items listed in each report.' +
+            '    <br />For more information, refer to the following:' +
             '    <ul>' +
             '       <li><a href="https://hmisportal.moh.go.tz/fpportal/#/familyPlanningHome">The Family Planning Dashboard</a></li>' +
             '       <li><a href="http://www.rchs.go.tz/traintracker/main.php">The TrainTracker HR training database</a></li>' +
@@ -226,7 +226,7 @@ function sendEmail(user, attachments) {
                 //You can view archived reports on the Family Planning Dashboard under the ‘Reports’ tab (add hyperlink if possible when ready)'+
             'Do not reply to this email. For further technical assistance or to provide feedback on the FP Dashboard, please <a href="https://hmisportal.moh.go.tz/fpportal/#/feedback">follow this link</a>. <br />' +
             'If you need to verify information presented in the FP dashboard, please check with the HMIS focal person.' +
-            '    If you are unable to view the attached PDF reports, you may wish to download a free PDF reader <a href="https://get.adobe.com/reader/">here</a>.<br />' +
+            '    <br /><br />If you are unable to view the attached PDF reports, you may wish to download a free PDF reader <a href="https://get.adobe.com/reader/">here</a>.<br />' +
             '    We hope you find this report useful.<br /><br />' +
             '    Kind regards,<br />' +
             '    Mr Clement Kihinga<br />' +
