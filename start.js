@@ -47,7 +47,7 @@ function fetchReport(organisationUnit) {
     }
     return new Promise(function (resolve, reject) {
         if (url == "" || attachments[organisationUnit.id]) {
-            reject();
+            resolve();
             return;
         }
         var path = require('path');
@@ -70,7 +70,7 @@ function fetchReport(organisationUnit) {
             console.log(stdout.length);
             if (err) {
                 console.log("Failed to fetch url:", err);
-                reject();
+                resolve();
             } else {
                 if(stdout == ("\nRendered Successfully\n")){
                     console.log("Report Renders");

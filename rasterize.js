@@ -51,12 +51,25 @@ if (system.args.length < 3 || system.args.length > 5) {
             phantom.exit(1);
         } else {
             (function(){
+                var inerval = window.setInterval(function () {
+                    if(page.title.toLowerCase("success").indexOf() > -1){
+                        renderReport();
+                        console.log("Rendered Successfully");
+                        phantom.exit();
+                    }else if(page.title.toLowerCase("error").indexOf() > -1){
+                        phantom.exit(1);
+                    }
+                }, 1000);
+            })();
+            window.setTimeout(function () {
+                phantom.exit(1);
+            }, 600000);
+            (function(){
                 window.setTimeout(function () {
                     renderReport();
-                    console.clear();
                     console.log("Rendered Successfully");
                     phantom.exit();
-                }, 5000);
+                }, 600000);
             })();
 
         }
