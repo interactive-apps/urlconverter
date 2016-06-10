@@ -64,7 +64,8 @@ function fetchReport(organisationUnit) {
             outputFile
         ];
         var postfixsever = require(__dirname + "/postfixsever");
-
+        console.log("Getting Reports");
+        console.log(JSON.stringfy(childArgs));
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             if (err) {
@@ -350,7 +351,7 @@ function generateReport(organisationUnit) {
 
 var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
-
+    console.log("Start Batch Sending of Reports.");
     var Promise = require('promise');
 
     var promises = [];
@@ -359,6 +360,7 @@ function generateReportsInBatch(organisationUnitIds){
     }
     Promise.all(promises)
         .then(function (res) {
+            console.log("Complettion of One Batch.");
             generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
         },function(err){
             reject();
@@ -409,6 +411,7 @@ getUser().then(function(users){
     //Generate reports in batches
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
     function sendUserEmails(){
+        var areAllEmailsSent = true;
         forLoop:
         for(var userIndex in users){
             if(!users[userIndex].emailSent){
@@ -417,12 +420,19 @@ getUser().then(function(users){
                     if(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report){
                         attachments.push(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report);
                     }else{
+                        areAllEmailsSent = false;
+                        console.log("Breaking sending an email to:" + users[userIndex].name);
                         continue forLoop;
                     }
                 }
+                console.log("Send Email To:" + users[userIndex].name);
                 sendEmail(users[userIndex],attachments);
+                users[userIndex].emailSent = true;
             }
         }
+        window.setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
+            sendUserEmails();
+        }, 120000);
     }
     window.setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
         sendUserEmails();
