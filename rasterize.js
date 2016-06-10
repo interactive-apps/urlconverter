@@ -53,11 +53,14 @@ if (system.args.length < 3 || system.args.length > 5) {
             phantom.exit(1);
         } else {
             (function(){
-                var inerval = window.setInterval(function () {
+                var interval = window.setInterval(function () {
+                    console.log("Page Title:",page.title);
                     if(page.title.toLowerCase("success").indexOf() > -1){
+
                         renderReport();
                         phantom.exit();
                     }else if(page.title.toLowerCase("error").indexOf() > -1){
+                        console.log("First Error.");
                         phantom.exit(1);
                     }
                 }, 1000);
@@ -68,6 +71,7 @@ if (system.args.length < 3 || system.args.length > 5) {
                     renderReport();
                     phantom.exit();
                 }else{
+                    console.log("Second Error.");
                     phantom.exit(1);
                 }
             }, 60000);
