@@ -362,7 +362,7 @@ function generateReportsInBatch(organisationUnitIds){
     }
     Promise.all(promises)
         .then(function (res) {
-            console.log("Complettion of One Batch.");
+            console.log("Completion of One Batch.");
             generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
         },function(err){
             reject();

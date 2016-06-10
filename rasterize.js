@@ -70,7 +70,7 @@ if (system.args.length < 3 || system.args.length > 5) {
                 }else{
                     phantom.exit(1);
                 }
-            }, 600000);
+            }, 60000);
         }
     });
 }
