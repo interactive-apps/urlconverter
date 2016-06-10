@@ -22,6 +22,9 @@ function renderReport(){
         i++;
     }
 }
+function finish(){
+
+}
 if (system.args.length < 3 || system.args.length > 5) {
     console.log('Usage: rasterize.js URL filename [paperwidth*paperheight|paperformat] [zoom]');
     console.log('  paper (pdf output) examples: "5in*7.5in", "10cm*20cm", "A4", "Letter"');
@@ -59,9 +62,15 @@ if (system.args.length < 3 || system.args.length > 5) {
                     }
                 }, 1000);
             })();
+            //Wait for 5 minutes to exit if the report is not correctly rendered
             window.setTimeout(function () {
-                phantom.exit(1);
-            }, 60000);
+                if(page.title.toLowerCase("success").indexOf() > -1){
+                    renderReport();
+                    phantom.exit();
+                }else{
+                    phantom.exit(1);
+                }
+            }, 300000);
         }
     });
 }
