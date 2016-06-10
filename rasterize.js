@@ -74,7 +74,7 @@ if (system.args.length < 3 || system.args.length > 5) {
                     console.log("Second Error.");
                     phantom.exit(1);
                 }
-            }, 60000);
+            }, 600000);
         }
     });
 }
