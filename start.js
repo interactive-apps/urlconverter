@@ -107,7 +107,11 @@ function fetchReport(organisationUnit) {
 }
 
 var emails = "";
-function fetchUsers() {
+/**
+ * Fetch Users
+ * @returns {*|exports|module.exports}
+ */
+/*function fetchUsers() {
     var request = require('request'),
         url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[id,email,name,organisationUnits[id,name,level]]",
         auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
@@ -148,7 +152,15 @@ function fetchUsers() {
             }
         );
     });
-}
+}*/
+/**
+ * Send Email to the user
+ *
+ * @param user
+ *
+ * @returns {*|exports|module.exports}
+ *
+ */
 function sendUserEmails(user) {
     var Promise = require('promise');
 
@@ -261,4 +273,160 @@ function sendEmail(user, attachments) {
         );
     });
 }
-fetchUsers();
+
+var organisationUnitsReports = {};
+var pendingOrgUnits = [];
+function generateReport(organisationUnit) {
+    var Promise = require('promise');
+    var url = "";
+    if (organisationUnit.level == "1") {
+        url = "https://hmisportal.moh.go.tz/fpportal/nationalPDF.html";
+    } else if (organisationUnit.level == "2") {
+        url = "https://hmisportal.moh.go.tz/fpportal/regionPDF.html#/home?uid=" + organisationUnit.id;
+    } else if (organisationUnit.level == "3") {
+        url = "https://hmisportal.moh.go.tz/fpportal/districtPDF.html#/home?uid=" + organisationUnit.id;
+    }
+    return new Promise(function (resolve, reject) {
+        if (url == "" || attachments[organisationUnit.id]) {
+            resolve();
+            return;
+        }
+        var path = require('path');
+        var childProcess = require('child_process');
+        var phantomjs = require('phantomjs');
+        var binPath = phantomjs.path;
+
+        var date = new Date();
+        var fileName = "report" + date.getFullYear() + "." + (date.getMonth() + 1) + "." + date.getDay() + "." + date.getHours() + "." + date.getMinutes() + "." + date.getSeconds() + "." + date.getMilliseconds() + ".png";
+        var outputFile = "tmp/" + fileName;
+        var childArgs = [
+            path.join(__dirname, 'rasterize.js'),
+            url,//'https://hmisportal.moh.go.tz/hmisportal/#/home',
+            outputFile
+        ];
+        var postfixsever = require(__dirname + "/postfixsever");
+
+        //Excecute phantomjs to convert url to
+        childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
+            if (err) {
+                console.log("Failed to fetch url:", err);
+                resolve();
+            } else {
+                console.log("Awesome");
+                var PDFImagePack = require("pdf-image-pack")
+
+                var imgs = [
+                    //outputFile
+                ];
+                var fs = require("fs");
+                fs.readdir("tmp", function(err,files){
+                    if(err){
+                        console.log("Error loading files.");
+                    }else{
+                        for(var i in files){
+                            if(files[i].indexOf(fileName) > -1){
+                                imgs.push("tmp/" + files[i]);
+                            }
+                        }
+                        var output = outputFile + ".pdf";
+                        var slide = new PDFImagePack();
+                        slide.output(imgs, output, function(err, doc){
+                            console.log("finish output");
+                            //attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
+                            organisationUnitsReports[organisationUnit.id].report = {path: output, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
+                            var idIndex = pendingOrgUnits.indexOf(organisationUnit.id);
+                            pendingOrgUnits.splice(idIndex,1);
+                            resolve();
+                        });
+                    }
+                })
+
+                //Fetch the group of user to get the report
+
+            }
+        });
+    });
+}
+
+var batchProcessNumber = 3;
+function generateReportsInBatch(organisationUnitIds){
+
+    var Promise = require('promise');
+
+    var promises = [];
+    for(var orgUnitIndex in organisationUnitIds){
+        promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
+    }
+    Promise.all(promises)
+        .then(function (res) {
+            generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
+        },function(err){
+            reject();
+        });
+}
+function getUser(){
+    var request = require('request'),
+        url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[id,email,name,organisationUnits[id,name,level]]",
+        auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
+    var Promise = require('promise');
+
+    return new Promise(function (resolve, reject) {
+        request(
+            {
+                url: url,
+                headers: {
+                    "Authorization": auth
+                }
+            },
+            function (error, response, body) {
+                if (error) {
+                    reject(error);
+                    console.log(error);
+                } else {
+                    var allPromises = [];
+                    //Parse the body into json object
+                    var json = JSON.parse(body);
+                    resolve(json.userGroups[0].users);
+                }
+
+                // Do more stuff with 'body' here
+            }
+        );
+    });
+}
+//fetchUsers();
+//Get users of the group
+getUser().then(function(users){
+    //Set the organisation Unit reports
+    for(var userIndex in users){
+        var user = users[userIndex];
+        users[userIndex].emailSent = false;
+        for (var orgUnit in user.organisationUnits) {
+            organisationUnitsReports[user.organisationUnits[orgUnit].id] = {details:user.organisationUnits[orgUnit]};
+            pendingOrgUnits.push(user.organisationUnits[orgUnit].id);
+        }
+    }
+    //Generate reports in batches
+    generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
+    function sendUserEmails(){
+        forLoop:
+        for(var userIndex in users){
+            if(!users[userIndex].emailSent){
+                var attachments = [];
+                for (var orgUnit in users[userIndex].organisationUnits) {
+                    if(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report){
+                        attachments.push(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report);
+                    }else{
+                        continue forLoop;
+                    }
+                }
+                sendEmail(users[userIndex],attachments);
+            }
+        }
+    }
+    window.setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
+        sendUserEmails();
+    }, 120000);
+},function(){
+    console.log("Error Fetching Users.")
+})
