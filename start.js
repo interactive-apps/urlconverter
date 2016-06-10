@@ -308,7 +308,7 @@ function generateReport(organisationUnit) {
         var postfixsever = require(__dirname + "/postfixsever");
 
         console.log("Getting Reports");
-        console.log(JSON.stringfy(childArgs));
+        console.log(JSON.stringify(childArgs));
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             if (err) {
