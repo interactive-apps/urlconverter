@@ -35,7 +35,7 @@ for (var index = 0; index < process.argv.length; index++) {
 }
 
 var attachments = {};
-function fetchReport(organisationUnit) {
+/*function fetchReport(organisationUnit) {
     var Promise = require('promise');
     var url = "";
     if (organisationUnit.level == "1") {
@@ -105,7 +105,7 @@ function fetchReport(organisationUnit) {
             }
         });
     });
-}
+}*/
 
 var emails = "";
 /**
@@ -307,6 +307,8 @@ function generateReport(organisationUnit) {
         ];
         var postfixsever = require(__dirname + "/postfixsever");
 
+        console.log("Getting Reports");
+        console.log(JSON.stringfy(childArgs));
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             if (err) {
