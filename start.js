@@ -241,6 +241,7 @@ function getUser(){
 }
 
 function sendEmailThread(){
+    console.log("Start Email Thread:")
     window.setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
         console.log("Checking for Emails");
         if(previousPendingReports ==  pendingOrgUnits.length){
@@ -285,7 +286,7 @@ function sendEmailThread(){
             previousPendingReports =  pendingOrgUnits.length;
             sendUserEmails();
         }
-    }, 120000);
+    }, 60000);
 }
 var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
 var previousPendingReports = 0;
@@ -297,6 +298,7 @@ function sendUserEmails(){
     var areAllEmailsSent = true;
     forLoop:
         for(var userIndex in users){
+            console.log("Here");
             if(!users[userIndex].emailSent){
                 var attachments = [];
                 for (var orgUnit in users[userIndex].organisationUnits) {
