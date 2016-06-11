@@ -200,17 +200,21 @@ function generateReportsInBatch(organisationUnitIds){
     var Promise = require('promise');
 
     var promises = [];
+    console.log("Start Batch Sending of Reports.1");
     for(var orgUnitIndex in organisationUnitIds){
         promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
     }
+    console.log("Start Batch Sending of Reports.2");
     Promise.all(promises)
         .then(function (res) {
             console.log("Completion of One Batch.");
             generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
         },function(err){
-            reject();
+            console.log("Error in batch process.");
         });
+    console.log("Start Batch Sending of Reports.3");
 }
+
 function getUser(){
     var request = require('request'),
         url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[id,email,name,organisationUnits[id,name,level]]",
@@ -242,38 +246,6 @@ function getUser(){
     });
 }
 
-var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
-var previousPendingReports = 0;
-
-/**
- * Send emails to users
- */
-function sendUserEmails(){
-    var areAllEmailsSent = true;
-    forLoop:
-        for(var userIndex in users){
-            if(!users[userIndex].emailSent){
-                var attachments = [];
-                for (var orgUnit in users[userIndex].organisationUnits) {
-                    if(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report){
-                        attachments.push(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report);
-                    }else{
-                        areAllEmailsSent = false;
-                        console.log("Breaking sending an email to:" + users[userIndex].name);
-                        continue forLoop;
-                    }
-                }
-                console.log("Send Email To:" + users[userIndex].name);
-                sendEmail(users[userIndex],attachments);
-                users[userIndex].emailSent = true;
-            }else{
-
-            }
-        }
-    if(!areAllEmailsSent){
-        sendEmailThread();
-    }
-}
 function sendEmailThread(){
     window.setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
         console.log("Checking for Emails");
@@ -321,6 +293,39 @@ function sendEmailThread(){
         }
     }, 120000);
 }
+var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
+var previousPendingReports = 0;
+
+/**
+ * Send emails to users
+ */
+function sendUserEmails(){
+    var areAllEmailsSent = true;
+    forLoop:
+        for(var userIndex in users){
+            if(!users[userIndex].emailSent){
+                var attachments = [];
+                for (var orgUnit in users[userIndex].organisationUnits) {
+                    if(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report){
+                        attachments.push(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report);
+                    }else{
+                        areAllEmailsSent = false;
+                        console.log("Breaking sending an email to:" + users[userIndex].name);
+                        continue forLoop;
+                    }
+                }
+                console.log("Send Email To:" + users[userIndex].name);
+                sendEmail(users[userIndex],attachments);
+                users[userIndex].emailSent = true;
+            }else{
+
+            }
+        }
+    if(!areAllEmailsSent){
+        sendEmailThread();
+    }
+}
+
 //fetchUsers();
 //Get users of the group
 getUser().then(function(users){
@@ -336,6 +341,7 @@ getUser().then(function(users){
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
+
 
     sendEmailThread();
 },function(){
