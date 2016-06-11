@@ -328,7 +328,7 @@ function sendUserEmails(){
 
 //fetchUsers();
 //Get users of the group
-sendEmailThread();
+
 getUser().then(function(users){
     //Set the organisation Unit reports
     for(var userIndex in users){
@@ -344,7 +344,7 @@ getUser().then(function(users){
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
     //generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
-
+    sendEmailThread();
 
 
 },function(){
