@@ -343,7 +343,7 @@ getUser().then(function(users){
     }
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
-    generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
+    //generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
 
 
 
