@@ -241,7 +241,7 @@ function getUser(){
 }
 
 function sendEmailThread(){
-    console.log("Start Email Thread:")
+    console.log("Start Email Thread:");
     setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
         console.log("Checking for Emails");
         if(previousPendingReports ==  pendingOrgUnits.length){
@@ -287,6 +287,7 @@ function sendEmailThread(){
             sendUserEmails();
         }
     }, 60000);
+    console.log("Timeout Set");
 }
 var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
 var previousPendingReports = 0;
