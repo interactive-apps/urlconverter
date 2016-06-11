@@ -240,53 +240,54 @@ function getUser(){
     });
 }
 
+var emailThreadCallback = function () {// Check every 2 minutes if a user's reports have been generated
+    console.log("Checking for Emails");
+    if(previousPendingReports ==  pendingOrgUnits.length){
+        var postfixsever = require(__dirname + "/postfixsever");
+        for(var administrator in administrators){
+            console.log("1");
+            var attachments = [];
+            attachments.unshift({
+                data: '' +
+                '<html>Dear <b>'+administrator.name+'</b>,<br /><br />' +
+                '    The HMIS Server has failed to create PDF report. Please followup to ensure the server is running well.' +
+                '</html>', alternative: true
+            });
+            console.log("2");
+            postfixsever.postfixSend(
+                {
+                    user: mailUser,
+                    password: mailPassword,
+                    host: mailHost,
+                    ssl: false,
+                    port: 25
+                },
+                {
+                    msg: "Report Generation Failure",
+                    from: "fpportal@hisptanzania.org",
+                    to: administrator.name + " <" + administrator.email + ">",
+                    subject: "Family Planning Dashboard Report Error " + month + ' ' + year,
+                    attachment: attachments
+                }, function (result) {
+                    if (result) {
+                        console.log("Admin Mail Error", result);
+                    } else {
+                        console.log("Admin Email Sent");
+                    }
+
+                }
+            );
+            console.log("3");
+        }
+        console.log("4");
+    }else{
+        previousPendingReports =  pendingOrgUnits.length;
+        sendUserEmails();
+    }
+}
 function sendEmailThread(){
     console.log("Start Email Thread:");
-    setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
-        console.log("Checking for Emails");
-        if(previousPendingReports ==  pendingOrgUnits.length){
-            var postfixsever = require(__dirname + "/postfixsever");
-            for(var administrator in administrators){
-                console.log("1");
-                var attachments = [];
-                attachments.unshift({
-                    data: '' +
-                    '<html>Dear <b>'+administrator.name+'</b>,<br /><br />' +
-                    '    The HMIS Server has failed to create PDF report. Please followup to ensure the server is running well.' +
-                    '</html>', alternative: true
-                });
-                console.log("2");
-                postfixsever.postfixSend(
-                    {
-                        user: mailUser,
-                        password: mailPassword,
-                        host: mailHost,
-                        ssl: false,
-                        port: 25
-                    },
-                    {
-                        msg: "Report Generation Failure",
-                        from: "fpportal@hisptanzania.org",
-                        to: administrator.name + " <" + administrator.email + ">",
-                        subject: "Family Planning Dashboard Report Error " + month + ' ' + year,
-                        attachment: attachments
-                    }, function (result) {
-                        if (result) {
-                            console.log("Admin Mail Error", result);
-                        } else {
-                            console.log("Admin Email Sent");
-                        }
-
-                    }
-                );
-                console.log("3");
-            }
-            console.log("4");
-        }else{
-            previousPendingReports =  pendingOrgUnits.length;
-            sendUserEmails();
-        }
-    }, 1000);
+    setTimeout(emailThreadCallback, 1000);
     console.log("Timeout Set");
 }
 var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
