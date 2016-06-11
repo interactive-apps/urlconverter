@@ -328,6 +328,7 @@ function sendUserEmails(){
 
 //fetchUsers();
 //Get users of the group
+sendEmailThread();
 getUser().then(function(users){
     //Set the organisation Unit reports
     for(var userIndex in users){
@@ -345,7 +346,7 @@ getUser().then(function(users){
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
 
 
-    sendEmailThread();
+
 },function(){
     console.log("Error Fetching Users.")
 })
