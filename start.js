@@ -203,12 +203,12 @@ function generateReportsInBatch(organisationUnitIds){
     for(var orgUnitIndex in organisationUnitIds){
         promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
     }
-    Promise.all(promises)
+    /*Promise.all(promises)
         .then(function (res) {
             generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
         },function(err){
             console.log("Error in batch process.");
-        });
+        });*/
 }
 
 function getUser(){
