@@ -242,7 +242,7 @@ function getUser(){
 
 function sendEmailThread(){
     console.log("Start Email Thread:")
-    window.setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
+    setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
         console.log("Checking for Emails");
         if(previousPendingReports ==  pendingOrgUnits.length){
             var postfixsever = require(__dirname + "/postfixsever");
