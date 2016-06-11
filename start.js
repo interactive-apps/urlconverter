@@ -133,7 +133,6 @@ function generateReport(organisationUnit) {
     }
 
     return new Promise(function (resolve, reject) {
-        console.log("Here")
         if (url == "") {
             resolve();
             return;
@@ -153,11 +152,9 @@ function generateReport(organisationUnit) {
         ];
         var postfixsever = require(__dirname + "/postfixsever");
 
-        console.log("Getting Reports");
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             if (err) {
-                console.log("Failed to fetch url:", err);
                 resolve();
             } else {
                 console.log("Awesome");
@@ -198,23 +195,18 @@ function generateReport(organisationUnit) {
 
 var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
-    console.log("Start Batch Sending of Reports.");
     var Promise = require('promise');
 
     var promises = [];
-    console.log("Start Batch Sending of Reports.1");
     for(var orgUnitIndex in organisationUnitIds){
         promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
     }
-    console.log("Start Batch Sending of Reports.2");
     Promise.all(promises)
         .then(function (res) {
-            console.log("Completion of One Batch.");
             generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
         },function(err){
             console.log("Error in batch process.");
         });
-    console.log("Start Batch Sending of Reports.3");
 }
 
 function getUser(){
@@ -308,12 +300,14 @@ function sendUserEmails(){
             if(!users[userIndex].emailSent){
                 var attachments = [];
                 for (var orgUnit in users[userIndex].organisationUnits) {
-                    if(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report){
-                        attachments.push(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report);
-                    }else{
-                        areAllEmailsSent = false;
-                        console.log("Breaking sending an email to:" + users[userIndex].name);
-                        continue forLoop;
+                    if(orgUnit.level == "1"  || orgUnit.level == "2" || orgUnit.level == "3"){
+                        if(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report){
+                            attachments.push(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report);
+                        }else{
+                            areAllEmailsSent = false;
+                            console.log("Breaking sending an email to:" + users[userIndex].name);
+                            continue forLoop;
+                        }
                     }
                 }
                 console.log("Send Email To:" + users[userIndex].name);
@@ -336,8 +330,10 @@ getUser().then(function(users){
         var user = users[userIndex];
         users[userIndex].emailSent = false;
         for (var orgUnit in user.organisationUnits) {
-            organisationUnitsReports[user.organisationUnits[orgUnit].id] = {details:user.organisationUnits[orgUnit]};
-            pendingOrgUnits.push(user.organisationUnits[orgUnit].id);
+            if(orgUnit.level == "1"  || orgUnit.level == "2" || orgUnit.level == "3"){
+                organisationUnitsReports[user.organisationUnits[orgUnit].id] = {details:user.organisationUnits[orgUnit]};
+                pendingOrgUnits.push(user.organisationUnits[orgUnit].id);
+            }
         }
     }
     previousPendingReports = pendingOrgUnits.length;
