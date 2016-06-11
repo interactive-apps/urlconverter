@@ -399,6 +399,52 @@ function getUser(){
         );
     });
 }
+
+var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
+var previousPendingReports = 0;
+function sendEmailThread(){
+    window.setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
+        if(previousPendingReports ==  pendingOrgUnits.length){
+            var postfixsever = require(__dirname + "/postfixsever");
+            for(var administrator in administrators){
+                var attachments = [];
+                attachments.unshift({
+                    data: '' +
+                    '<html>Dear <b>'+administrator.name+'</b>,<br /><br />' +
+                    '    The HMIS Server has failed to create PDF report. Please followup to ensure the server is running well.' +
+                    '</html>', alternative: true
+                });
+                postfixsever.postfixSend(
+                    {
+                        user: mailUser,
+                        password: mailPassword,
+                        host: mailHost,
+                        ssl: false,
+                        port: 25
+                    },
+                    {
+                        msg: "Report Generation Failure",
+                        from: "fpportal@hisptanzania.org",
+                        to: administrator.name + " <" + administrator.email + ">",
+                        subject: "Family Planning Dashboard Report Error " + month + ' ' + year,
+                        attachment: attachments
+                    }, function (result) {
+                        if (result) {
+                            console.log("Admin Mail Error", result);
+                        } else {
+                            console.log("Admin Email Sent");
+                        }
+
+                    }
+                );
+            }
+
+        }else{
+            previousPendingReports =  pendingOrgUnits.length;
+            sendUserEmails();
+        }
+    }, 120000);
+}
 //fetchUsers();
 //Get users of the group
 getUser().then(function(users){
@@ -411,6 +457,7 @@ getUser().then(function(users){
             pendingOrgUnits.push(user.organisationUnits[orgUnit].id);
         }
     }
+    previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
     function sendUserEmails(){
@@ -431,15 +478,15 @@ getUser().then(function(users){
                 console.log("Send Email To:" + users[userIndex].name);
                 sendEmail(users[userIndex],attachments);
                 users[userIndex].emailSent = true;
+            }else{
+
             }
         }
-        window.setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
-            sendUserEmails();
-        }, 120000);
+        if(!areAllEmailsSent){
+            sendEmailThread();
+        }
     }
-    window.setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
-        sendUserEmails();
-    }, 120000);
+    sendEmailThread();
 },function(){
     console.log("Error Fetching Users.")
 })
