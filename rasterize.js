@@ -55,11 +55,11 @@ if (system.args.length < 3 || system.args.length > 5) {
             (function(){
                 var interval = window.setInterval(function () {
                     console.log("Page Title:",page.title);
-                    if(page.title.toLowerCase("success").indexOf() > -1){
+                    if(page.title.toLowerCase().indexOf("success") > -1){
 
                         renderReport();
                         phantom.exit();
-                    }else if(page.title.toLowerCase("error").indexOf() > -1){
+                    }else if(page.title.toLowerCase().indexOf("error") > -1){
                         console.log("First Error.");
                         phantom.exit(1);
                     }
@@ -67,7 +67,7 @@ if (system.args.length < 3 || system.args.length > 5) {
             })();
             //Wait for 5 minutes to exit if the report is not correctly rendered
             window.setTimeout(function () {
-                if(page.title.toLowerCase("success").indexOf() > -1){
+                if(page.title.toLowerCase().indexOf("success") > -1){
                     renderReport();
                     phantom.exit();
                 }else{
