@@ -203,8 +203,7 @@ function generateReportsInBatch(organisationUnitIds){
     for(var orgUnitIndex in organisationUnitIds){
         promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
     }
-    var promise = new Promise();
-    promise.all(promises)
+    return Promise.all(promises)
         .then(function (res) {
             generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
         },function(err){
