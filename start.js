@@ -287,7 +287,7 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
 }
 function sendEmailThread(){
     console.log("Start Email Thread:");
-    setTimeout(emailThreadCallback, 1000);
+    setInterval(emailThreadCallback, 1000);
     console.log("Timeout Set");
 }
 var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
