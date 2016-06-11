@@ -66,8 +66,10 @@ if (month == 1) {
 } else if (month == 12) {
     month = "December";
 }
+
+var Promise = require('promise');
 function sendEmail(user, attachments) {
-    var Promise = require('promise');
+    //var Promise = require('promise');
     return new Promise(function (resolve, reject) {
         var postfixsever = require(__dirname + "/postfixsever");
         attachments.unshift({
@@ -122,7 +124,7 @@ function sendEmail(user, attachments) {
 var organisationUnitsReports = {};
 var pendingOrgUnits = [];
 function generateReport(organisationUnit) {
-    var Promise = require('promise');
+    //var Promise = require('promise');
     var url = "";
     if (organisationUnit.level == "1") {
         url = "https://hmisportal.moh.go.tz/fpportal/nationalPDF.html";
@@ -195,7 +197,7 @@ function generateReport(organisationUnit) {
 
 var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
-    var Promise = require('promise');
+    //var Promise = require('promise');
 
     var promises = [];
     for(var orgUnitIndex in organisationUnitIds){
@@ -213,7 +215,6 @@ function getUser(){
     var request = require('request'),
         url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[id,email,name,organisationUnits[id,name,level]]",
         auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
-    var Promise = require('promise');
 
     return new Promise(function (resolve, reject) {
         request(
@@ -343,7 +344,7 @@ getUser().then(function(users){
     }
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
-    //generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
+    generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
     sendEmailThread();
 
 
