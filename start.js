@@ -242,7 +242,7 @@ function getUser(){
 
 var emailThreadCallback = function () {// Check every 2 minutes if a user's reports have been generated
     console.log("Checking for Emails");
-    if(previousPendingReports ==  pendingOrgUnits.length){
+    /*if(previousPendingReports ==  pendingOrgUnits.length){
         var postfixsever = require(__dirname + "/postfixsever");
         for(var administrator in administrators){
             console.log("1");
@@ -283,7 +283,7 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
     }else{
         previousPendingReports =  pendingOrgUnits.length;
         sendUserEmails();
-    }
+    }*/
 }
 function sendEmailThread(){
     console.log("Start Email Thread:");
