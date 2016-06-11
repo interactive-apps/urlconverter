@@ -157,7 +157,7 @@ function generateReport(organisationUnit) {
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             if (err) {
-                resolve();
+                reject();
             } else {
                 console.log("Awesome");
                 var PDFImagePack = require("pdf-image-pack")
