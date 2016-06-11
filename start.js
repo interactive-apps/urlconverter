@@ -34,162 +34,6 @@ for (var index = 0; index < process.argv.length; index++) {
     }
 }
 
-var attachments = {};
-/*function fetchReport(organisationUnit) {
-    var Promise = require('promise');
-    var url = "";
-    if (organisationUnit.level == "1") {
-        url = "https://hmisportal.moh.go.tz/fpportal/nationalPDF.html";
-    } else if (organisationUnit.level == "2") {
-        url = "https://hmisportal.moh.go.tz/fpportal/regionPDF.html#/home?uid=" + organisationUnit.id;
-    } else if (organisationUnit.level == "3") {
-        url = "https://hmisportal.moh.go.tz/fpportal/districtPDF.html#/home?uid=" + organisationUnit.id;
-    }
-    return new Promise(function (resolve, reject) {
-        if (url == "" || attachments[organisationUnit.id]) {
-            resolve();
-            return;
-        }
-        var path = require('path');
-        var childProcess = require('child_process');
-        var phantomjs = require('phantomjs');
-        var binPath = phantomjs.path;
-
-        var date = new Date();
-        var fileName = "report" + date.getFullYear() + "." + (date.getMonth() + 1) + "." + date.getDay() + "." + date.getHours() + "." + date.getMinutes() + "." + date.getSeconds() + "." + date.getMilliseconds() + ".png";
-        var outputFile = "tmp/" + fileName;
-        var childArgs = [
-            path.join(__dirname, 'rasterize.js'),
-            url,//'https://hmisportal.moh.go.tz/hmisportal/#/home',
-            outputFile
-        ];
-        var postfixsever = require(__dirname + "/postfixsever");
-        console.log("Getting Reports");
-        console.log(JSON.stringfy(childArgs));
-        //Excecute phantomjs to convert url to
-        childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
-            if (err) {
-                console.log("Failed to fetch url:", err);
-                resolve();
-            } else {
-                console.log("Awesome");
-                var PDFImagePack = require("pdf-image-pack")
-
-                var imgs = [
-                    //outputFile
-                ];
-                var fs = require("fs");
-                fs.readdir("tmp", function(err,files){
-                    if(err){
-                        console.log("Error loading files.");
-                    }else{
-                        for(var i in files){
-                            if(files[i].indexOf(fileName) > -1){
-                                imgs.push("tmp/" + files[i]);
-                            }
-                        }
-                        console.log("Rendering Page.");
-                        var output = outputFile + ".pdf";
-                        var slide = new PDFImagePack();
-                        slide.output(imgs, output, function(err, doc){
-                            console.log("finish output");
-                            //attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
-                            attachments[organisationUnit.id] = {path: output, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
-                            resolve();
-                        });
-                    }
-                })
-
-                //Fetch the group of user to get the report
-
-            }
-        });
-    });
-}*/
-
-var emails = "";
-/**
- * Fetch Users
- * @returns {*|exports|module.exports}
- */
-/*function fetchUsers() {
-    var request = require('request'),
-        url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[id,email,name,organisationUnits[id,name,level]]",
-        auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
-    var Promise = require('promise');
-
-    return new Promise(function (resolve, reject) {
-        request(
-            {
-                url: url,
-                headers: {
-                    "Authorization": auth
-                }
-            },
-            function (error, response, body) {
-                if (error) {
-                    reject(error);
-                    console.log(error);
-                } else {
-                    var allPromises = [];
-                    //Parse the body into json object
-                    var json = JSON.parse(body);
-
-                    var users = json.userGroups[0].users;
-
-                    //Extract emails
-                    for (var userIndex in users) {
-
-                        allPromises.push(sendUserEmails(users[userIndex]));
-                    }
-                    Promise.all(allPromises)
-                        .then(function (res) {
-                            resolve(res);
-                            console.log("Emails sent successfully.")
-                        });
-                }
-
-                // Do more stuff with 'body' here
-            }
-        );
-    });
-}*/
-/**
- * Send Email to the user
- *
- * @param user
- *
- * @returns {*|exports|module.exports}
- *
- */
-/*function sendUserEmails(user) {
-    var Promise = require('promise');
-
-    return new Promise(function (resolve, reject) {
-        var userSend = user;
-        var promises = [];
-
-        for (var orgUnit in user.organisationUnits) {
-
-            promises.push(fetchReport(user.organisationUnits[orgUnit]));
-        }
-        Promise.all(promises)
-            .then(function (res) {
-                var userAttachments = [];
-                for (var orgUnit in userSend.organisationUnits) {
-                    if(attachments[userSend.organisationUnits[orgUnit].id]){
-                        userAttachments.push(attachments[userSend.organisationUnits[orgUnit].id]);
-                    }else{
-                        console.log("Attachment not loaded")
-                    }
-                }
-                sendEmail(userSend, userAttachments).then(function () {
-                    resolve();
-                });
-            });
-    });
-
-}*/
 var todaysDate = new Date();
 var month = todaysDate.getMonth() + 1 - 2;
 var year = todaysDate.getFullYear();
@@ -308,8 +152,6 @@ function generateReport(organisationUnit) {
         var postfixsever = require(__dirname + "/postfixsever");
 
         console.log("Getting Reports");
-        console.log(binPath);
-        console.log(JSON.stringify(childArgs));
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             if (err) {
@@ -434,9 +276,11 @@ function sendUserEmails(){
 }
 function sendEmailThread(){
     window.setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
+        console.log("Checking for Emails");
         if(previousPendingReports ==  pendingOrgUnits.length){
             var postfixsever = require(__dirname + "/postfixsever");
             for(var administrator in administrators){
+                console.log("1");
                 var attachments = [];
                 attachments.unshift({
                     data: '' +
@@ -444,6 +288,7 @@ function sendEmailThread(){
                     '    The HMIS Server has failed to create PDF report. Please followup to ensure the server is running well.' +
                     '</html>', alternative: true
                 });
+                console.log("2");
                 postfixsever.postfixSend(
                     {
                         user: mailUser,
@@ -467,8 +312,9 @@ function sendEmailThread(){
 
                     }
                 );
+                console.log("3");
             }
-
+            console.log("4");
         }else{
             previousPendingReports =  pendingOrgUnits.length;
             sendUserEmails();
