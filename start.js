@@ -286,7 +286,7 @@ function sendEmailThread(){
             previousPendingReports =  pendingOrgUnits.length;
             sendUserEmails();
         }
-    }, 60000);
+    }, 1000);
     console.log("Timeout Set");
 }
 var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
