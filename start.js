@@ -131,8 +131,10 @@ function generateReport(organisationUnit) {
     } else if (organisationUnit.level == "3") {
         url = "https://hmisportal.moh.go.tz/fpportal/districtPDF.html#/home?uid=" + organisationUnit.id;
     }
+
     return new Promise(function (resolve, reject) {
-        if (url == "" || attachments[organisationUnit.id]) {
+        console.log("Here")
+        if (url == "") {
             resolve();
             return;
         }
