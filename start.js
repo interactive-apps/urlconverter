@@ -162,7 +162,7 @@ var emails = "";
  * @returns {*|exports|module.exports}
  *
  */
-function sendUserEmails(user) {
+/*function sendUserEmails(user) {
     var Promise = require('promise');
 
     return new Promise(function (resolve, reject) {
@@ -189,7 +189,7 @@ function sendUserEmails(user) {
             });
     });
 
-}
+}*/
 var todaysDate = new Date();
 var month = todaysDate.getMonth() + 1 - 2;
 var year = todaysDate.getFullYear();
@@ -402,6 +402,36 @@ function getUser(){
 
 var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
 var previousPendingReports = 0;
+
+/**
+ * Send emails to users
+ */
+function sendUserEmails(){
+    var areAllEmailsSent = true;
+    forLoop:
+        for(var userIndex in users){
+            if(!users[userIndex].emailSent){
+                var attachments = [];
+                for (var orgUnit in users[userIndex].organisationUnits) {
+                    if(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report){
+                        attachments.push(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report);
+                    }else{
+                        areAllEmailsSent = false;
+                        console.log("Breaking sending an email to:" + users[userIndex].name);
+                        continue forLoop;
+                    }
+                }
+                console.log("Send Email To:" + users[userIndex].name);
+                sendEmail(users[userIndex],attachments);
+                users[userIndex].emailSent = true;
+            }else{
+
+            }
+        }
+    if(!areAllEmailsSent){
+        sendEmailThread();
+    }
+}
 function sendEmailThread(){
     window.setTimeout(function () {// Check every 2 minutes if a user's reports have been generated
         if(previousPendingReports ==  pendingOrgUnits.length){
@@ -460,32 +490,7 @@ getUser().then(function(users){
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
-    function sendUserEmails(){
-        var areAllEmailsSent = true;
-        forLoop:
-        for(var userIndex in users){
-            if(!users[userIndex].emailSent){
-                var attachments = [];
-                for (var orgUnit in users[userIndex].organisationUnits) {
-                    if(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report){
-                        attachments.push(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report);
-                    }else{
-                        areAllEmailsSent = false;
-                        console.log("Breaking sending an email to:" + users[userIndex].name);
-                        continue forLoop;
-                    }
-                }
-                console.log("Send Email To:" + users[userIndex].name);
-                sendEmail(users[userIndex],attachments);
-                users[userIndex].emailSent = true;
-            }else{
 
-            }
-        }
-        if(!areAllEmailsSent){
-            sendEmailThread();
-        }
-    }
     sendEmailThread();
 },function(){
     console.log("Error Fetching Users.")
