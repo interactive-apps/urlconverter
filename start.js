@@ -284,13 +284,14 @@ function sendEmailThread(){
 }
 var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
-    //console.log("Start of Bacth")
+    console.log("Start of Bacth");
     //var Promise = require('promise');
     var promises = [];
     for(var orgUnitIndex in organisationUnitIds){
+        console.log(organisationUnitsReports[organisationUnitIds[orgUnitIndex]]);
         promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
     }
-    //console.log("Sending a batch requests.");
+    console.log("Sending a batch requests.");
     return Promise.all(promises)
         .then(function (res) {
             sendEmailThread();
