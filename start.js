@@ -276,9 +276,10 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
     }
 }
 function sendEmailThread(){
-    console.log("Start Email Thread:");
-    setInterval(emailThreadCallback, 1000);
+    //console.log("Start Email Thread:");
+    //setInterval(emailThreadCallback, 1000);
     //console.log("Timeout Set");
+    emailThreadCallback();
 }
 var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
