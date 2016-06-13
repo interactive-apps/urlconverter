@@ -218,7 +218,7 @@ function getUser(){
                     reject(error);
                     console.log(error);
                 } else {
-                    console.log(JSON.stringify(response));
+                    console.log(JSON.stringify(body));
                     var allPromises = [];
                     //Parse the body into json object
                     var json = JSON.parse(body);
@@ -339,6 +339,7 @@ function sendUserEmails(){
 //Get users of the group
 
 getUser().then(function(users){
+    console.log("Here1");
     //Set the organisation Unit reports
     for(var userIndex in users){
         var user = users[userIndex];
@@ -352,6 +353,7 @@ getUser().then(function(users){
     }
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
+    console.log("Here2");
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
 },function(){
     console.log("Error Fetching Users.")
