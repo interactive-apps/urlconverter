@@ -195,23 +195,6 @@ function generateReport(organisationUnit) {
     });
 }
 
-var batchProcessNumber = 3;
-function generateReportsInBatch(organisationUnitIds){
-    //var Promise = require('promise');
-
-    var promises = [];
-    for(var orgUnitIndex in organisationUnitIds){
-        promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
-    }
-    return Promise.all(promises)
-        .then(function (res) {
-            sendEmailThread();
-            generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
-        },function(err){
-            console.log("Error in batch process.");
-        });
-}
-
 function getUser(){
     var request = require('request'),
         url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[id,email,name,organisationUnits[id,name,level]]",
@@ -241,7 +224,6 @@ function getUser(){
         );
     });
 }
-
 var emailThreadCallback = function () {// Check every 2 minutes if a user's reports have been generated
     console.log("Checking for Emails");
     if(previousPendingReports ==  pendingOrgUnits.length){
@@ -287,6 +269,22 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
         sendUserEmails();
     }
 }
+var batchProcessNumber = 3;
+function generateReportsInBatch(organisationUnitIds){
+    //var Promise = require('promise');
+    var promises = [];
+    for(var orgUnitIndex in organisationUnitIds){
+        promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
+    }
+    return Promise.all(promises)
+        .then(function (res) {
+            sendEmailThread();
+            generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
+        },function(err){
+            console.log("Error in batch process.");
+        });
+}
+
 function sendEmailThread(){
     console.log("Start Email Thread:");
     setInterval(emailThreadCallback, 1000);
