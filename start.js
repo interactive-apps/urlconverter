@@ -293,31 +293,32 @@ function generateReportsInBatch(organisationUnitIds){
 
 var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
 var previousPendingReports = 0;
-
+var dhisUsers = [];
 /**
  * Send emails to users
  */
 function sendUserEmails(){
     var areAllEmailsSent = true;
     forLoop:
-        for(var userIndex in users){
+        for(var userIndex in dhisUsers){
             console.log("Here");
-            if(!users[userIndex].emailSent){
+            if(!dhisUsers[userIndex].emailSent){
                 var attachments = [];
-                for (var orgUnit in users[userIndex].organisationUnits) {
+                for (var orgUnitIndex in dhisUsers[userIndex].organisationUnits) {
+                    var orgUnit = dhisUsers[userIndex].organisationUnits[orgUnitIndex];
                     if(orgUnit.level == "1"  || orgUnit.level == "2" || orgUnit.level == "3"){
-                        if(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report){
-                            attachments.push(organisationUnitsReports[users[userIndex].organisationUnits[orgUnit].id].report);
+                        if(organisationUnitsReports[orgUnit.id].report){
+                            attachments.push(organisationUnitsReports[orgUnit.id].report);
                         }else{
                             areAllEmailsSent = false;
-                            console.log("Breaking sending an email to:" + users[userIndex].name);
+                            console.log("Breaking sending an email to:" + dhisUsers[userIndex].name);
                             continue forLoop;
                         }
                     }
                 }
-                console.log("Send Email To:" + users[userIndex].name);
-                sendEmail(users[userIndex],attachments);
-                users[userIndex].emailSent = true;
+                console.log("Send Email To:" + dhisUsers[userIndex].name);
+                sendEmail(dhisUsers[userIndex],attachments);
+                dhisUsers[userIndex].emailSent = true;
             }else{
 
             }
