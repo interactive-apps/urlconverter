@@ -134,9 +134,7 @@ function generateReport(organisationUnit) {
     } else if (organisationUnit.level == "3") {
         url = "https://hmisportal.moh.go.tz/fpportal/districtPDF.html#/home?uid=" + organisationUnit.id;
     }
-    console.log("Start of Promise");
     return new Promise(function (resolve, reject) {
-        console.log("Generate Report Promise");
         if (url == "") {
             resolve();
             return;
@@ -156,14 +154,11 @@ function generateReport(organisationUnit) {
         ];
         var postfixsever = require(__dirname + "/postfixsever");
 
-        console.log("Generating Reports");
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             if (err) {
-                console.log("Rejected");
                 reject();
             } else {
-                console.log("Awesome");
                 var PDFImagePack = require("pdf-image-pack")
 
                 var imgs = [
@@ -182,7 +177,6 @@ function generateReport(organisationUnit) {
                         var output = outputFile + ".pdf";
                         var slide = new PDFImagePack();
                         slide.output(imgs, output, function(err, doc){
-                            console.log("finish output");
                             //attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
                             organisationUnitsReports[organisationUnit.id].report = {path: output, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
                             var idIndex = pendingOrgUnits.indexOf(organisationUnit.id);
@@ -272,13 +266,12 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
 }
 function sendEmailThread(){
     //console.log("Start Email Thread:");
-    //setInterval(emailThreadCallback, 1000);
+    setInterval(emailThreadCallback, 1000);
     //console.log("Timeout Set");
     //emailThreadCallback();
 }
 var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
-    console.log("Length:",organisationUnitIds.length);
     //var Promise = require('promise');
     var promises = [];
     for(var orgUnitIndex in organisationUnitIds){
@@ -338,29 +331,21 @@ function sendUserEmails(){
 //Get users of the group
 
 getUser().then(function(users){
-    console.log("Here1");
     //Set the organisation Unit reports
     for(var userIndex in users){
         var user = users[userIndex];
         console.log(JSON.stringify(user));
         users[userIndex].emailSent = false;
         for (var orgUnitIndex in user.organisationUnits) {
-            console.log("Here2");
             var orgUnit = user.organisationUnits[orgUnitIndex];
             if(orgUnit.level == "1"  || orgUnit.level == "2" || orgUnit.level == "3"){
-                console.log("Here3");
                 organisationUnitsReports[orgUnit.id] = {details:orgUnit};
                 pendingOrgUnits.push(orgUnit.id);
-                console.log("Here4");
             }
         }
     }
-    console.log("Here5");
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
-    console.log("Here6");
-    console.log("Organisation units:",organisationUnitsReports);
-    console.log("Pending",pendingOrgUnits.length);
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
 },function(){
     console.log("Error Fetching Users.")
