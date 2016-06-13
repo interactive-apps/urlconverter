@@ -213,6 +213,7 @@ function getUser(){
                     reject(error);
                     console.log(error);
                 } else {
+                    console.log(JSON.stringify(response));
                     var allPromises = [];
                     //Parse the body into json object
                     var json = JSON.parse(body);
