@@ -266,7 +266,7 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
 }
 function sendEmailThread(){
     //console.log("Start Email Thread:");
-    setInterval(emailThreadCallback, 1000);
+    setInterval(emailThreadCallback, 300000);
     //console.log("Timeout Set");
     //emailThreadCallback();
 }
@@ -281,7 +281,7 @@ function generateReportsInBatch(organisationUnitIds){
     //console.log("Sending a batch requests.");
     return Promise.all(promises)
         .then(function (res) {
-            sendEmailThread();
+
             if(pendingOrgUnits.length != 0){
                 generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
             }
@@ -348,6 +348,7 @@ getUser().then(function(users){
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
+    sendEmailThread();
 },function(){
     console.log("Error Fetching Users.")
 })
