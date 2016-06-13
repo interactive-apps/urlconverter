@@ -279,7 +279,7 @@ function sendEmailThread(){
     //console.log("Start Email Thread:");
     //setInterval(emailThreadCallback, 1000);
     //console.log("Timeout Set");
-    emailThreadCallback();
+    //emailThreadCallback();
 }
 var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
