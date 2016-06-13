@@ -205,6 +205,7 @@ function generateReportsInBatch(organisationUnitIds){
     }
     return Promise.all(promises)
         .then(function (res) {
+            sendEmailThread();
             generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
         },function(err){
             console.log("Error in batch process.");
@@ -243,7 +244,7 @@ function getUser(){
 
 var emailThreadCallback = function () {// Check every 2 minutes if a user's reports have been generated
     console.log("Checking for Emails");
-    /*if(previousPendingReports ==  pendingOrgUnits.length){
+    if(previousPendingReports ==  pendingOrgUnits.length){
         var postfixsever = require(__dirname + "/postfixsever");
         for(var administrator in administrators){
             console.log("1");
@@ -284,7 +285,7 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
     }else{
         previousPendingReports =  pendingOrgUnits.length;
         sendUserEmails();
-    }*/
+    }
 }
 function sendEmailThread(){
     console.log("Start Email Thread:");
@@ -345,9 +346,6 @@ getUser().then(function(users){
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
-    sendEmailThread();
-
-
 },function(){
     console.log("Error Fetching Users.")
 })
