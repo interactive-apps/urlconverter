@@ -295,7 +295,9 @@ function generateReportsInBatch(organisationUnitIds){
     return Promise.all(promises)
         .then(function (res) {
             sendEmailThread();
-            generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
+            if(pendingOrgUnits.length == 0){
+                generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
+            }
         },function(err){
             console.log("Error in batch process.");
         });
@@ -357,8 +359,9 @@ getUser().then(function(users){
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
     console.log("Here2");
-    console.log(pendingOrgUnits.length);
-    //generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
+    console.log("Organisation units:",organisationUnitsReports);
+    console.log("Pending",pendingOrgUnits.length);
+    generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
 },function(){
     console.log("Error Fetching Users.")
 })
