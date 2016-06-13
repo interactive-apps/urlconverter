@@ -223,12 +223,12 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
     console.log("Checking for Emails");
     if(previousPendingReports ==  pendingOrgUnits.length){
         var postfixsever = require(__dirname + "/postfixsever");
-        for(var administrator in administrators){
+        for(var adminIndex in administrators){
             console.log("1");
             var attachments = [];
             attachments.unshift({
                 data: '' +
-                '<html>Dear <b>'+administrator.name+'</b>,<br /><br />' +
+                '<html>Dear <b>'+administrator[adminIndex].name+'</b>,<br /><br />' +
                 '    The HMIS Server has failed to create PDF report. Please followup to ensure the server is running well.' +
                 '</html>', alternative: true
             });
@@ -244,7 +244,7 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
                 {
                     msg: "Report Generation Failure",
                     from: "fpportal@hisptanzania.org",
-                    to: administrator.name + " <" + administrator.email + ">",
+                    to: administrator[adminIndex].name + " <" + administrator[adminIndex].email + ">",
                     subject: "Family Planning Dashboard Report Error " + month + ' ' + year,
                     attachment: attachments
                 }, function (result) {
