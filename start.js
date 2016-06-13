@@ -329,6 +329,7 @@ function sendUserEmails(){
 //Get users of the group
 
 getUser().then(function(users){
+    dhisUsers = users;
     //Set the organisation Unit reports
     for(var userIndex in users){
         var user = users[userIndex];
@@ -346,7 +347,7 @@ getUser().then(function(users){
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
 
     //Start an email thread which checks for users whose reports have been generated
-    interval = setInterval(emailThreadCallback, 300000);
+    interval = setInterval(emailThreadCallback, 60000);
 },function(){
     console.log("Error Fetching Users.")
 })
