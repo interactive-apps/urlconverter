@@ -269,12 +269,6 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
         sendUserEmails();
     }
 }
-function sendEmailThread(){
-    //console.log("Start Email Thread:");
-    interval = setInterval(emailThreadCallback, 300000);
-    //console.log("Timeout Set");
-    //emailThreadCallback();
-}
 var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
     //var Promise = require('promise');
@@ -285,7 +279,7 @@ function generateReportsInBatch(organisationUnitIds){
     //console.log("Sending a batch requests.");
     return Promise.all(promises)
         .then(function (res) {
-
+            console.log("Finished a batch:",pendingOrgUnits.length);
             if(pendingOrgUnits.length != 0){
                 generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
             }
@@ -303,6 +297,7 @@ var dhisUsers = [];
  */
 function sendUserEmails(){
     var areAllEmailsSent = true;
+    console.log("Sending Email:",JSON.stringify(dhisUsers));
     forLoop:
         for(var userIndex in dhisUsers){
             console.log("Here");
@@ -327,6 +322,7 @@ function sendUserEmails(){
 
             }
         }
+    console.log("Sending Email Finished:",JSON.stringify(dhisUsers));
 }
 
 //fetchUsers();
@@ -336,7 +332,6 @@ getUser().then(function(users){
     //Set the organisation Unit reports
     for(var userIndex in users){
         var user = users[userIndex];
-        console.log(JSON.stringify(user));
         users[userIndex].emailSent = false;
         for (var orgUnitIndex in user.organisationUnits) {
             var orgUnit = user.organisationUnits[orgUnitIndex];
@@ -349,7 +344,9 @@ getUser().then(function(users){
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
-    sendEmailThread();
+
+    //Start an email thread which checks for users whose reports have been generated
+    interval = setInterval(emailThreadCallback, 300000);
 },function(){
     console.log("Error Fetching Users.")
 })
