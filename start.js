@@ -345,16 +345,20 @@ getUser().then(function(users){
         console.log(JSON.stringify(user));
         users[userIndex].emailSent = false;
         for (var orgUnitIndex in user.organisationUnits) {
+            console.log("Here2");
             var orgUnit = user.organisationUnits[orgUnitIndex];
             if(orgUnit.level == "1"  || orgUnit.level == "2" || orgUnit.level == "3"){
+                console.log("Here3");
                 organisationUnitsReports[user.organisationUnits[orgUnit].id] = {details:user.organisationUnits[orgUnit]};
                 pendingOrgUnits.push(user.organisationUnits[orgUnit].id);
+                console.log("Here4");
             }
         }
     }
+    console.log("Here5");
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
-    console.log("Here2");
+    console.log("Here6");
     console.log("Organisation units:",organisationUnitsReports);
     console.log("Pending",pendingOrgUnits.length);
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
