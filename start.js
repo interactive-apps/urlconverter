@@ -135,6 +135,7 @@ function generateReport(organisationUnit) {
     }
 
     return new Promise(function (resolve, reject) {
+        console.log("Generate Report Promise");
         if (url == "") {
             resolve();
             return;
@@ -154,9 +155,11 @@ function generateReport(organisationUnit) {
         ];
         var postfixsever = require(__dirname + "/postfixsever");
 
+        console.log("Generating Reports");
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             if (err) {
+                console.log("Rejected");
                 reject();
             } else {
                 console.log("Awesome");
@@ -279,6 +282,7 @@ function sendEmailThread(){
 }
 var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
+    console.log("Start of Bacth")
     //var Promise = require('promise');
     var promises = [];
     for(var orgUnitIndex in organisationUnitIds){
