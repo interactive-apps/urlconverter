@@ -270,6 +270,11 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
         sendUserEmails();
     }
 }
+function sendEmailThread(){
+    console.log("Start Email Thread:");
+    setInterval(emailThreadCallback, 1000);
+    console.log("Timeout Set");
+}
 var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
     //var Promise = require('promise');
@@ -277,6 +282,7 @@ function generateReportsInBatch(organisationUnitIds){
     for(var orgUnitIndex in organisationUnitIds){
         promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
     }
+    console.log("Sending a batch requests.");
     return Promise.all(promises)
         .then(function (res) {
             sendEmailThread();
@@ -286,11 +292,7 @@ function generateReportsInBatch(organisationUnitIds){
         });
 }
 
-function sendEmailThread(){
-    console.log("Start Email Thread:");
-    setInterval(emailThreadCallback, 1000);
-    console.log("Timeout Set");
-}
+
 var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
 var previousPendingReports = 0;
 
