@@ -124,8 +124,6 @@ function sendEmail(user, attachments) {
 var organisationUnitsReports = {};
 var pendingOrgUnits = [];
 function generateReport(organisationUnit) {
-    //var Promise = require('promise');
-    console.log(organisationUnit);
     var url = "";
     if (organisationUnit.level == "1") {
         url = "https://hmisportal.moh.go.tz/fpportal/nationalPDF.html";
@@ -273,13 +271,15 @@ var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
     //var Promise = require('promise');
     var promises = [];
+    console.log("Generating Reports for:");
     for(var orgUnitIndex in organisationUnitIds){
+        console.log("\t" + organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details.name);
         promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
     }
     //console.log("Sending a batch requests.");
     return Promise.all(promises)
         .then(function (res) {
-            console.log("Finished a batch:",pendingOrgUnits.length);
+            console.log("Finished Generating Reports:",pendingOrgUnits.length," Reports Remaining");
             if(pendingOrgUnits.length != 0){
                 generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
             }
@@ -296,11 +296,9 @@ var dhisUsers = [];
  * Send emails to users
  */
 function sendUserEmails(){
-    var areAllEmailsSent = true;
-    console.log("Sending Email:",JSON.stringify(dhisUsers));
+    console.log("Start Sending Email");
     forLoop:
         for(var userIndex in dhisUsers){
-            console.log("Here");
             if(!dhisUsers[userIndex].emailSent){
                 var attachments = [];
                 for (var orgUnitIndex in dhisUsers[userIndex].organisationUnits) {
@@ -310,19 +308,19 @@ function sendUserEmails(){
                             attachments.push(organisationUnitsReports[orgUnit.id].report);
                         }else{
                             areAllEmailsSent = false;
-                            console.log("Breaking sending an email to:" + dhisUsers[userIndex].name);
+                            console.log("\tBreaking sending an email to:" + dhisUsers[userIndex].name," Some reports not generated.");
                             continue forLoop;
                         }
                     }
                 }
-                console.log("Send Email To:" + dhisUsers[userIndex].name);
+                console.log("\tSending Email To:" + dhisUsers[userIndex].name);
                 sendEmail(dhisUsers[userIndex],attachments);
                 dhisUsers[userIndex].emailSent = true;
             }else{
 
             }
         }
-    console.log("Sending Email Finished:",JSON.stringify(dhisUsers));
+    console.log("Sending Email Done");
 }
 
 //fetchUsers();
