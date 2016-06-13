@@ -344,6 +344,7 @@ getUser().then(function(users){
         var user = users[userIndex];
         users[userIndex].emailSent = false;
         for (var orgUnit in user.organisationUnits) {
+            console.log(JSON.stringify(orgUnit));
             if(orgUnit.level == "1"  || orgUnit.level == "2" || orgUnit.level == "3"){
                 organisationUnitsReports[user.organisationUnits[orgUnit].id] = {details:user.organisationUnits[orgUnit]};
                 pendingOrgUnits.push(user.organisationUnits[orgUnit].id);
