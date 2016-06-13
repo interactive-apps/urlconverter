@@ -75,7 +75,7 @@ function sendEmail(user, attachments) {
         attachments.unshift({
             data: '' +
             '<html>Dear <b>' + user.name + '</b>,<br /><br />' +
-            '    Find attached the monthly Family Planning summary report/s for ' + month + ' ' + year + '.' +
+            '    Find attached the monthly Family Planning summary report/s for December 2015.' +
             '   Please use Family Planning monthly report/s as a program and performance management tool, to help identify gaps in HR training and FP service delivery, for more targeted and efficient supportive supervision, program planning and resource allocation. You are reminded to pay attention to the action items listed in each report.' +
             '    <br /><br />For more information, refer to the following:' +
             '    <ul>' +
