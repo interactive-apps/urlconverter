@@ -278,17 +278,17 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
 function sendEmailThread(){
     console.log("Start Email Thread:");
     setInterval(emailThreadCallback, 1000);
-    console.log("Timeout Set");
+    //console.log("Timeout Set");
 }
 var batchProcessNumber = 3;
 function generateReportsInBatch(organisationUnitIds){
-    console.log("Start of Bacth")
+    //console.log("Start of Bacth")
     //var Promise = require('promise');
     var promises = [];
     for(var orgUnitIndex in organisationUnitIds){
         promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
     }
-    console.log("Sending a batch requests.");
+    //console.log("Sending a batch requests.");
     return Promise.all(promises)
         .then(function (res) {
             sendEmailThread();
