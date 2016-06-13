@@ -357,7 +357,8 @@ getUser().then(function(users){
     previousPendingReports = pendingOrgUnits.length;
     //Generate reports in batches
     console.log("Here2");
-    generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
+    console.log(pendingOrgUnits.length);
+    //generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
 },function(){
     console.log("Error Fetching Users.")
 })
