@@ -335,8 +335,10 @@ getUser().then(function(users){
         for (var orgUnitIndex in user.organisationUnits) {
             var orgUnit = user.organisationUnits[orgUnitIndex];
             if(orgUnit.level == "1"  || orgUnit.level == "2" || orgUnit.level == "3"){
+                if(!organisationUnitsReports[orgUnit.id]){
+                    pendingOrgUnits.push(orgUnit.id);
+                }
                 organisationUnitsReports[orgUnit.id] = {details:orgUnit};
-                pendingOrgUnits.push(orgUnit.id);
             }
         }
     }
