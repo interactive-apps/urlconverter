@@ -345,7 +345,7 @@ getUser().then(function(users){
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
 
     //Start an email thread which checks for users whose reports have been generated
-    interval = setInterval(emailThreadCallback, 60000);
+    interval = setInterval(emailThreadCallback, 10000);
 },function(){
     console.log("Error Fetching Users.")
 })
