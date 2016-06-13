@@ -203,9 +203,7 @@ function getUser(){
     var request = require('request'),
         url = dhisServer + "/api/userGroups.json?filter=name:eq:" + userGroup + "&fields=users[id,email,name,organisationUnits[id,name,level]]",
         auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
-    console.log("Getting User");
     return new Promise(function (resolve, reject) {
-        console.log("Getting User Promises");
         request(
             {
                 url: url,
@@ -214,13 +212,9 @@ function getUser(){
                 }
             },
             function (error, response, body) {
-                console.log("Got Users");
                 if (error) {
                     reject(error);
-                    console.log(error);
                 } else {
-                    console.log(JSON.stringify(body));
-                    var allPromises = [];
                     //Parse the body into json object
                     var json = JSON.parse(body);
                     resolve(json.userGroups[0].users);
@@ -295,7 +289,7 @@ function generateReportsInBatch(organisationUnitIds){
     return Promise.all(promises)
         .then(function (res) {
             sendEmailThread();
-            if(pendingOrgUnits.length == 0){
+            if(pendingOrgUnits.length != 0){
                 generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
             }
         },function(err){
