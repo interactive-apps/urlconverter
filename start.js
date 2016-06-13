@@ -125,6 +125,7 @@ var organisationUnitsReports = {};
 var pendingOrgUnits = [];
 function generateReport(organisationUnit) {
     //var Promise = require('promise');
+    console.log(organisationUnit);
     var url = "";
     if (organisationUnit.level == "1") {
         url = "https://hmisportal.moh.go.tz/fpportal/nationalPDF.html";
@@ -133,7 +134,7 @@ function generateReport(organisationUnit) {
     } else if (organisationUnit.level == "3") {
         url = "https://hmisportal.moh.go.tz/fpportal/districtPDF.html#/home?uid=" + organisationUnit.id;
     }
-
+    console.log("Start of Promise");
     return new Promise(function (resolve, reject) {
         console.log("Generate Report Promise");
         if (url == "") {
