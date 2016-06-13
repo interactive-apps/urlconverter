@@ -219,9 +219,10 @@ function getUser(){
         );
     });
 }
+var interval;
 var emailThreadCallback = function () {// Check every 2 minutes if a user's reports have been generated
     console.log("Checking for Emails");
-    if(previousPendingReports ==  pendingOrgUnits.length){
+    if(previousPendingReports ==  pendingOrgUnits.length && pendingOrgUnits.length != 0){
         var postfixsever = require(__dirname + "/postfixsever");
         for(var adminIndex in administrators){
             console.log("1");
@@ -260,13 +261,17 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
         }
         console.log("4");
     }else{
+        if(pendingOrgUnits.length == 0){
+            console.log("All organisation Units finished.")
+            clearInterval(interval);
+        }
         previousPendingReports =  pendingOrgUnits.length;
         sendUserEmails();
     }
 }
 function sendEmailThread(){
     //console.log("Start Email Thread:");
-    setInterval(emailThreadCallback, 300000);
+    interval = setInterval(emailThreadCallback, 300000);
     //console.log("Timeout Set");
     //emailThreadCallback();
 }
@@ -275,7 +280,6 @@ function generateReportsInBatch(organisationUnitIds){
     //var Promise = require('promise');
     var promises = [];
     for(var orgUnitIndex in organisationUnitIds){
-        console.log(organisationUnitsReports[organisationUnitIds[orgUnitIndex]]);
         promises.push(generateReport(organisationUnitsReports[organisationUnitIds[orgUnitIndex]].details));
     }
     //console.log("Sending a batch requests.");
@@ -323,9 +327,6 @@ function sendUserEmails(){
 
             }
         }
-    if(!areAllEmailsSent){
-        sendEmailThread();
-    }
 }
 
 //fetchUsers();
