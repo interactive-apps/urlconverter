@@ -260,7 +260,7 @@ var emailThreadCallback = function () {// Check every 2 minutes if a user's repo
         console.log("4");
     }else{
         if(pendingOrgUnits.length == 0){
-            console.log("All organisation Units finished.")
+            console.log("All Organisation Unit Reports have been Generated.")
             clearInterval(interval);
         }
         previousPendingReports =  pendingOrgUnits.length;
@@ -346,8 +346,8 @@ getUser().then(function(users){
     //Generate reports in batches
     generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
 
-    //Start an email thread which checks for users whose reports have been generated after every 5 minutes
-    interval = setInterval(emailThreadCallback, 60000);
+    //Start an email thread which checks for users whose reports have been generated after every 15 minutes
+    interval = setInterval(emailThreadCallback, 900000);
 },function(){
     console.log("Error Fetching Users.")
 })
