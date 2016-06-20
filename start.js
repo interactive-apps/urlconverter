@@ -284,10 +284,9 @@ function generateReportsInBatch(organisationUnitIds){
                 generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
             }
         },function(err){
-            console.log("Error in batch process.");
+            console.log("Error in batch process.",err);
         });
 }
-
 
 var administrators = [{name:"Vincent P. Minde",email:"vincentminde@gmail.com"}]
 var previousPendingReports = 0;
@@ -308,7 +307,7 @@ function sendUserEmails(){
                             attachments.push(organisationUnitsReports[orgUnit.id].report);
                         }else{
                             areAllEmailsSent = false;
-                            console.log("\tBreaking sending an email to:" + dhisUsers[userIndex].name," Some reports not generated.");
+                            console.log("\tBreaking sending an email to:" + dhisUsers[userIndex].name," Some reports not generated.",pendingOrgUnits.length);
                             continue forLoop;
                         }
                     }
