@@ -177,7 +177,7 @@ function generateReport(organisationUnit) {
                         var slide = new PDFImagePack();
                         slide.output(imgs, output, function(err, doc){
                             //attachments[organisationUnit.id] = {path: output, type: "image/png", name: organisationUnit.name + " Report.png"};
-                            organisationUnitsReports[organisationUnit.id].report = {path: output, type: "application/pdf", name: organisationUnit.name + " Report.pdf"};
+                            organisationUnitsReports[organisationUnit.id].report = {path: output, type: "application/pdf", name: organisationUnit.name + " " + month +" Report.pdf"};
                             var idIndex = pendingOrgUnits.indexOf(organisationUnit.id);
                             pendingOrgUnits.splice(idIndex,1);
                             resolve();
