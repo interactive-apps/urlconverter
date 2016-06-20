@@ -155,7 +155,7 @@ function generateReport(organisationUnit) {
         //Excecute phantomjs to convert url to
         childProcess.execFile(binPath, childArgs, function (err, stdout, stderr) {
             if (err) {
-                reject();
+                reject(err);
             } else {
                 var PDFImagePack = require("pdf-image-pack")
 
@@ -166,6 +166,7 @@ function generateReport(organisationUnit) {
                 fs.readdir("tmp", function(err,files){
                     if(err){
                         console.log("Error loading files.");
+                        reject(err);
                     }else{
                         for(var i in files){
                             if(files[i].indexOf(fileName) > -1){
@@ -285,6 +286,7 @@ function generateReportsInBatch(organisationUnitIds){
             }
         },function(err){
             console.log("Error in batch process.",err);
+            generateReportsInBatch(pendingOrgUnits.slice(0,batchProcessNumber));
         });
 }
 
