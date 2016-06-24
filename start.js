@@ -79,18 +79,18 @@ function sendEmail(user, attachments) {
             '   Please use Family Planning monthly report/s as a program and performance management tool, to help identify gaps in HR training and FP service delivery, for more targeted and efficient supportive supervision, program planning and resource allocation. You are reminded to pay attention to the action items listed in each report.' +
             '    <br /><br />For more information, refer to the following:' +
             '    <ul>' +
-            '       <li><a href="https://hmisportal.moh.go.tz/fpportal/#/familyPlanningHome">The Family Planning Dashboard</a></li>' +
+            '       <li><a href="https://hmisportal.moh.go.tz/hmisportal/#/familyPlanningHome">The Family Planning Dashboard</a></li>' +
             '       <li><a href="http://www.rchs.go.tz/traintracker/main.php">The TrainTracker HR training database</a></li>' +
             '   </ul>' +
                 //You can view archived reports on the Family Planning Dashboard under the ‘Reports’ tab (add hyperlink if possible when ready)'+
-            'Do not reply to this email. For further technical assistance or to provide feedback on the FP Dashboard, please <a href="https://hmisportal.moh.go.tz/fpportal/#/feedback">follow this link</a>. <br />' +
+            'Do not reply to this email. For further technical assistance or to provide feedback on the FP Dashboard, please <a href="https://hmisportal.moh.go.tz/hmisportal/#/feedback">follow this link</a>. <br />' +
             'If you need to verify information presented in the FP dashboard, please check with the HMIS focal person.' +
             '    <br /><br />If you are unable to view the attached PDF reports, you may wish to download a free PDF reader <a href="https://get.adobe.com/reader/">here</a>.<br />' +
             '    We hope you find this report useful.<br /><br />' +
             '    Kind regards,<br />' +
             '    Mr Clement Kihinga<br />' +
             'Reproductive and Child Health Section (RCHS)<br />' +
-            'Ministry of Health, Community Development, Gender, Elderly and Children<br /><br /><span style="font-size: 10px;color: #555;">To stop receiving these emails please <a href="https://hmisportal.moh.go.tz/fpportal/#/unsubscribe?uid=' + user.id + '">click here</a> to unsubscribe.</span>' +
+            'Ministry of Health, Community Development, Gender, Elderly and Children<br /><br /><span style="font-size: 10px;color: #555;">To stop receiving these emails please <a href="https://hmisportal.moh.go.tz/hmisportal/#/unsubscribe?uid=' + user.id + '">click here</a> to unsubscribe.</span>' +
             '</html>', alternative: true
         });
         postfixsever.postfixSend(
