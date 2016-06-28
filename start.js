@@ -80,7 +80,7 @@ function sendEmail(user, attachments) {
             '    <br /><br />For more information, refer to the following:' +
             '    <ul>' +
             '       <li><a href="https://hmisportal.moh.go.tz/hmisportal/#/familyPlanningHome">The Family Planning Dashboard</a></li>' +
-            '       <li><a href="http://www.rchs.go.tz/traintracker/main.php">The TrainTracker HR training database</a></li>' +
+            '       <li><a href="http://www.rchs.go.tz/traintracker/ ">The TrainTracker HR training database</a></li>' +
             '   </ul>' +
                 //You can view archived reports on the Family Planning Dashboard under the ‘Reports’ tab (add hyperlink if possible when ready)'+
             'Do not reply to this email. For further technical assistance or to provide feedback on the FP Dashboard, please <a href="https://hmisportal.moh.go.tz/hmisportal/#/feedback">follow this link</a>. <br />' +
