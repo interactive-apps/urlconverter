@@ -35,7 +35,7 @@ for (var index = 0; index < process.argv.length; index++) {
 }
 
 var todaysDate = new Date();
-var month = todaysDate.getMonth() + 1 - 2;
+var month = todaysDate.getMonth() - 3;
 var year = todaysDate.getFullYear();
 if (month < 1) {
     month = 12 + month;
