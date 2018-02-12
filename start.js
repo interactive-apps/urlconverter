@@ -128,11 +128,11 @@ var pendingOrgUnits = [];
 function generateReport(organisationUnit) {
     var url = "";
     if (organisationUnit.level == "1") {
-        url = "https://hmisportal.moh.go.tz/hmisportal/nationalPDF.html?period=" + period;
+        url = "https://hmisportal.moh.go.tz/hmisportalold/nationalPDF.html?period=" + period;
     } else if (organisationUnit.level == "2") {
-        url = "https://hmisportal.moh.go.tz/hmisportal/regionPDF.html#/home?uid=" + organisationUnit.id + "&period=" + period;
+        url = "https://hmisportal.moh.go.tz/hmisportalold/regionPDF.html#/home?uid=" + organisationUnit.id + "&period=" + period;
     } else if (organisationUnit.level == "3") {
-        url = "https://hmisportal.moh.go.tz/hmisportal/districtPDF.html#/home?uid=" + organisationUnit.id + "&period=" + period;
+        url = "https://hmisportal.moh.go.tz/hmisportalold/districtPDF.html#/home?uid=" + organisationUnit.id + "&period=" + period;
     }
     return new Promise(function (resolve, reject) {
         if (url == "") {
