@@ -13,7 +13,7 @@
 
 
 var dhisServer = "http://localhost:8080/dhis2",
-    username = "", password = "", mailUser = "", mailPassword = "", mailHost = "localhost", userGroup = "";
+    username = "", password = "", mailUser = "", mailPassword = "", mailHost = "localhost", userGroup = "",period="201711";
 //Evaluate arguments
 for (var index = 0; index < process.argv.length; index++) {
     var commandArgument = process.argv[index];
@@ -25,6 +25,8 @@ for (var index = 0; index < process.argv.length; index++) {
         password = process.argv[index + 1];
     } else if (commandArgument == "-mu") {
         mailUser = process.argv[index + 1];
+    } else if (commandArgument == "-pe") {
+        period = process.argv[index + 1];
     } else if (commandArgument == "-mp") {
         mailPassword = process.argv[index + 1];
     } else if (commandArgument == "-mh") {
@@ -33,7 +35,7 @@ for (var index = 0; index < process.argv.length; index++) {
         userGroup = process.argv[index + 1];
     }
 }
-
+console.log(period);
 var todaysDate = new Date();
 var month = todaysDate.getMonth() - 3;
 var year = todaysDate.getFullYear();
@@ -126,11 +128,11 @@ var pendingOrgUnits = [];
 function generateReport(organisationUnit) {
     var url = "";
     if (organisationUnit.level == "1") {
-        url = "https://hmisportal.moh.go.tz/hmisportal/nationalPDF.html";
+        url = "https://hmisportal.moh.go.tz/hmisportal/nationalPDF.html?period=" + period;
     } else if (organisationUnit.level == "2") {
-        url = "https://hmisportal.moh.go.tz/hmisportal/regionPDF.html#/home?uid=" + organisationUnit.id;
+        url = "https://hmisportal.moh.go.tz/hmisportal/regionPDF.html#/home?uid=" + organisationUnit.id + "&period=" + period;
     } else if (organisationUnit.level == "3") {
-        url = "https://hmisportal.moh.go.tz/hmisportal/districtPDF.html#/home?uid=" + organisationUnit.id;
+        url = "https://hmisportal.moh.go.tz/hmisportal/districtPDF.html#/home?uid=" + organisationUnit.id + "&period=" + period;
     }
     return new Promise(function (resolve, reject) {
         if (url == "") {
@@ -352,3 +354,5 @@ getUser().then(function(users){
 },function(){
     console.log("Error Fetching Users.")
 })
+
+//node start -url url -dhis https://hmisportal.moh.go.tz/dhis -u vincentminde -p StrongPasswordABC123 -group 'Portal Test Group' -pe 201711

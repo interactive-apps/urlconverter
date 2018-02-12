@@ -4,10 +4,11 @@
   "description": "",
   "main": "start.js",
   "dependencies": {
-    "phantomjs": ">=1.0.0",
     "emailjs": "",
+    "pdf-image-pack": "git://github.com/suisho/pdf-image-pack.git#master",
+    "phantomjs": ">=1.0.0",
     "promise": "",
-    "pdf-image-pack": "git://github.com/suisho/pdf-image-pack.git#master"
+    "request": "^2.83.0"
   },
   "author": "Vincent P. Minde",
   "license": "BSD-2-Clause"
