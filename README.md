@@ -1,5 +1,7 @@
 #Convert reports to pdf and send via email
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/interactive-apps/urlconverter.svg)](https://greenkeeper.io/)
+
 This is a node js app to convert a url to a pdf and send emails to users in the dhis server.
 
 To bring it up and running follow the following instructions:
